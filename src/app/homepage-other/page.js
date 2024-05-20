@@ -1,16 +1,17 @@
+'use client';
 import styles from './page.module.css';
+import { ArrowForwardOutline } from 'react-ionicons'
 
 export default function HomePage() {
   return (
     <div className={styles.container}>
       <h1>Welcome to Issue Management</h1>
       <div className={styles.arrow}>
-        {/* <span>→</span> */}
         <a href="/myproject">
-        <br />
-        <img src="/arrow.png" alt="Arrow" style={{width: "50%"}}/>
-        <br />
-        <span>My project</span>
+          <br />
+          <ArrowForwardOutline color={'#00000'} height="50px" width="50px" />
+          <br />
+          <span>My project</span>
         </a>
       </div>
       <footer className={styles.footer}>
