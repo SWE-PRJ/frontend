@@ -1,0 +1,142 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1rem 2rem;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .main {
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 2rem;
+    padding: 0 2rem;
+  }
+  
+  .issueDetails {
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 2rem;
+    border-radius: 8px;
+    background-color: #fff;
+  }
+  
+  .issueHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+  
+  .issueHeader > div {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .description {
+    margin-bottom: 2rem;
+  }
+  
+  .description textarea {
+    width: 100%;
+    height: 100px;
+    resize: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.5rem;
+  }
+  
+  .stateAssignee {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+  
+  .stateAssignee div {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .stateAssignee label {
+    margin-bottom: 0.5rem;
+  }
+  
+  .stateAssignee select {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .comments {
+    margin-bottom: 2rem;
+  }
+  
+  .comment {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+  
+  .comment span {
+    margin-bottom: 0.5rem;
+  }
+  
+  .comment input {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.5rem;
+    background-color: #f9f9f9;
+  }
+  
+  .addComment {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+  }
+  
+  .addComment textarea {
+    width: 100%;
+    height: 60px;
+    resize: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .addComment button {
+    align-self: flex-end;
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #0070f3;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .addComment button:hover {
+    background-color: #005bb5;
+  }
+  
+  .issueModify {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #0070f3;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 1rem;
+  }
+  
+  .issueModify:hover {
+    background-color: #005bb5;
+  }
+  
