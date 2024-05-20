@@ -1,0 +1,29 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100vh;
+}
+
+.arrow {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.arrow span {
+    font-size: 2rem;
+    margin-right: 10px;
+}
+
+.arrow a {
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: black;
+}
+
+.footer {
+    margin-top: 20px;
+}
