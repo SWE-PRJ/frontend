@@ -1,17 +1,31 @@
 'use client';
-import styles from '../../app/browse_issue/page.module.css';
+import styles from '../../app/browse_issue/[project]/page.module.css';
+import { useRouter, useParams } from 'next/navigation';
 
-const issues = [
-  { title: 'issue11111', state: 'new', priority: 'major', description: '이러쿵저러쿵설명11' },
-  { title: 'issue22222', state: 'assigned', priority: 'minor', description: '이러쿵저러쿵설명22' },
-];
+const issues = {
+    project1: [
+        { issueID: 'issue1', title: 'issue11111', state: 'new', priority: 'major', description: '이러쿵저러쿵설명11' },
+        { issueID: 'issue2', title: 'issue22222', state: 'assigned', priority: 'minor', description: '이러쿵저러쿵설명22' },
+    ],
+    project2: [
+        { issueID: 'issue3', title: 'issue33333', state: 'new', priority: 'major', description: '이러쿵저러쿵설명33' },
+        { issueID: 'issue4', title: 'issue44444', state: 'assigned', priority: 'minor', description: '이러쿵저러쿵설명44' },
+      ]
+    };
 
 export default function BrowseIssue() {
+  const router = useRouter();
+  const { project } = useParams();
+  const projectIssues = issues[project] || [];
+  const handleClickIssue = (issueID) => {
+    router.push(`/modify_issue/${issueID}`);
+  };
+
   return (
     <div className={styles.container}>
       <main className={styles.main}>
         <div className={styles.projectHeader}>
-            <h1>/Project1</h1>
+            <h1>/{project}</h1>
         </div>
         <label>
           <input type="checkbox" />
@@ -28,8 +42,8 @@ export default function BrowseIssue() {
             </tr>
           </thead>
           <tbody>
-            {issues.map((issue, index) => (
-              <tr key={index}>
+            {projectIssues.map((issue) => (
+              <tr key={issue.issueID} onClick={() => handleClickIssue(issue.issueID)} className={styles.row}>
                 <td>{issue.title}</td>
                 <td>{issue.state}</td>
                 <td>{issue.priority}</td>

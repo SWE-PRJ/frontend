@@ -56,3 +56,10 @@
     background-color: #f2f2f2;
   }
   
+  .row {
+    cursor: pointer;
+  }
+  
+  .row:hover {
+    background-color: hsl(0, 0%, 95%);
+  }

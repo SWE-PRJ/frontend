@@ -1,6 +1,18 @@
 'use client';
 import { useState, useEffect } from 'react';
-import styles from '../../app/modify_issue/page.module.css';
+import styles from '../../app/modify_issue/[issue]/page.module.css';
+import { useRouter, useParams } from 'next/navigation';
+
+const issues = {
+  project1: [
+      { issueID: 'issue1', title: 'issue11111', state: 'new', priority: 'major', description: '이러쿵저러쿵설명11' },
+      { issueID: 'issue2', title: 'issue22222', state: 'assigned', priority: 'minor', description: '이러쿵저쩌쿵설명22' },
+  ],
+  project2: [
+      { issueID: 'issue3', title: 'issue33333', state: 'new', priority: 'major', description: '이러쿵저러쿵설명33' },
+      { issueID: 'issue4', title: 'issue44444', state: 'assigned', priority: 'minor', description: '이러쿵저러쿵설명44' },
+  ],
+};
 
 export default function ModifyIssue() {
   const [issue, setIssue] = useState(null);
@@ -11,13 +23,21 @@ export default function ModifyIssue() {
     { date: '2024/05/17', user: 'dev1', text: '수정했습니다' }
   ]);
   const [newComment, setNewComment] = useState('');
+  const { issueID } = useParams();
 
   useEffect(() => {
-    const storedIssue = JSON.parse(localStorage.getItem('issue'));
-    if (storedIssue) {
-      setIssue(storedIssue);
+    for (const project in issues) {
+      const projectIssues = issues[project];
+      const foundIssue = projectIssues.find(issue => issue.issueID === issueID);
+      if (foundIssue) {
+        setIssue(foundIssue);
+        setState(foundIssue.state || '');
+        setAssignee(foundIssue.assignee || '');
+        setComments(foundIssue.comments || []);
+        break;
+      }
     }
-  }, []);
+  }, [issueID]);
 
   const handleStateChange = (event) => {
     setState(event.target.value);
@@ -38,7 +58,10 @@ export default function ModifyIssue() {
     setIssue(updatedIssue);
     setComments(newComments);
     setNewComment('');
-    localStorage.setItem('issue', JSON.stringify(updatedIssue));
+
+    // const storedIssues = JSON.parse(localStorage.getItem('issues')) || {};
+    // storedIssues[issueID] = updatedIssue;
+    // localStorage.setItem('issues', JSON.stringify(storedIssues));
   };
 
   if (!issue) {
@@ -51,16 +74,16 @@ export default function ModifyIssue() {
         <div className={styles.issueDetails}>
           <div className={styles.issueHeader}>
             <div>
-              <span>Issue11111</span>
-              <span>2024/05/16 tester1</span>
+              <span>{issue.title}</span>
+              <span>{issue.date} {issue.user}</span>
             </div>
             <div>
-              <span>Priority: major</span>
-              <span>Fixer: dev1</span>
+              <span>Priority: {issue.priority}</span>
+              <span>Fixer: {issue.fixer}</span>
             </div>
           </div>
           <div className={styles.description}>
-            <textarea readOnly>이러쿵저러쿵설명11</textarea>
+            <textarea readOnly>{issue.description}</textarea>
           </div>
           <div className={styles.stateAssignee}>
             <div>
