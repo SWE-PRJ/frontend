@@ -38,3 +38,23 @@
     text-decoration: none;
   }
   
+  .role {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+  
+  .role div {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .role label {
+    margin-bottom: 0.5rem;
+  }
+  
+  .role select {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
