@@ -8,6 +8,8 @@ export default function CreateAccount() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('');
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // 수정 필요
@@ -16,9 +18,24 @@ export default function CreateAccount() {
     }
   };
 
+  const handleRoleChange = (event) => {
+    setRole(event.target.value);
+  };
+
   return (
     <div className={styles.container}>
       <h2>회원가입</h2>
+      <div className={styles.role}>
+        <div>
+          <label htmlFor="role">Role</label>
+          <select id="role" value={role} onChange={handleRoleChange}>
+            <option value="admin">Admin</option>
+            <option value="tester">Tester</option>
+            <option value="developer">Developer</option>
+            <option value="pl">PL</option>
+          </select>
+        </div>
+      </div>
       <form onSubmit={handleSubmit} className={styles.form}>
         <input
           type="email"
@@ -43,6 +60,7 @@ export default function CreateAccount() {
         />
         <button type="submit" className={styles.button}>Create account</button>
       </form>
+      
     </div>
   );
 }

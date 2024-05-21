@@ -11,8 +11,11 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // 인증 로직
-    if (username && password) {
+    if (username == 'dd' && password) {
       router.push('/homepage-other');
+    }
+    else {
+      alert('wrong!');
     }
   };
 
