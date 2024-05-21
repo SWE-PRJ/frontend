@@ -7,7 +7,7 @@ export default function HomePage() {
         <div className={styles.container}>
             <h1>Welcome to Issue Management</h1>
             <div className={styles.arrow}>
-                <a href="/myproject">
+                <a href="/create_project">
                     <br />
                     <AddOutline color={'#00000'} height="50px" width="50px" />
                     <br />
