@@ -8,8 +8,37 @@ body {
 header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 10px 20px;
   background-color: #f5e0dc;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-right {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.header-right span {
+  margin-right: 10px;
+}
+
+.header-right button {
+  padding: 5px 10px;
+  background-color: #8b0000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.header-right button:hover {
+  background-color: #a52a2a;
 }
 
 h1 {
