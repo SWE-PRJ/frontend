@@ -33,9 +33,13 @@
   .issueHeader {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 2rem;
+    align-items: center;
   }
   
+  .issueHeaderRight {
+    margin-right: auto;
+  }
+
   .issueHeader > div {
     display: flex;
     flex-direction: column;
@@ -140,3 +144,39 @@
     background-color: #70abe6;
   }
   
+  .issueDelete {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #9fa1a3;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 1rem;
+    float: right;
+  }
+  
+  .issueDelete:hover {
+    background-color: #686b6d;
+  }
+
+  .commentContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+  }
+  
+  .commentText {
+    flex-grow: 1;
+    border: none;
+    background-color: transparent;
+    padding-right: 20px;
+  }
+  
+  .commentInfo {
+    white-space: nowrap;
+  }
