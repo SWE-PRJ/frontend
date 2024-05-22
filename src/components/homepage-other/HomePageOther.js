@@ -1,5 +1,5 @@
 'use client';
-import styles from '../../app/homepage-admin/page.module.css';
+import styles from '../../app/homepage-other/page.module.css';
 import { ArrowForwardOutline } from 'react-ionicons'
 import { useRouter } from 'next/navigation';
 
