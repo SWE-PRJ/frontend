@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { usePathname } from 'next/navigation';
@@ -14,28 +15,52 @@ const inter = Inter({ subsets: ["latin"] });
 export default function RootLayout({ children }) {
   const router = useRouter();
   const pathname = usePathname();
+  const [sidebarVisible, setSidebarVisible] = useState(false);
   const hideHeaderElements = pathname === "/create_account" || pathname === "/";  
 
 
   const handleLogout = () => {
-    router.push('/'); // Redirects to the home page
+    router.push('/');
+  };
+
+  const toggleSidebar = () => {
+    setSidebarVisible(!sidebarVisible);
+  };
+
+  const navigateTo = (path) => {
+    setSidebarVisible(false);
+    router.push(path);
   };
 
   return (
     <html lang="en">
-      <body>
+      <body className={inter.className}>
         <header>
-          <h1>Issue Management</h1>
+          <h1 onClick={toggleSidebar}>Issue Management</h1>
           <div className="header-right">
-          {!hideHeaderElements && (
-          <>
-            <span>Tester</span>
-            <button onClick={handleLogout}>Log out</button>
-          </>
-          )}
-        </div>
+            {!hideHeaderElements && (
+              <>
+                <span>Tester</span>
+                <button onClick={handleLogout}>Log out</button>
+              </>
+            )}
+          </div>
         </header>
-        <main>{children}</main>
+        <div className={`sidebar ${sidebarVisible ? 'visible' : ''}`}>
+          <div className="sidebar-section">
+            <ul>
+              <li onClick={() => navigateTo('/browse_project')}>Projects</li>
+              <li onClick={() => navigateTo('/browse_issue')}>Issues</li>
+            </ul>
+          </div>
+          <div className="sidebar-section sidebar-section-lower">
+            <ul>
+              <li onClick={() => navigateTo('/analysis')}>Analysis</li>
+              {/* <li onClick={() => navigateTo('/settings')}>Settings</li> */}
+            </ul>
+          </div>
+        </div>
+        <main className={sidebarVisible ? 'sidebar-visible' : ''}>{children}</main>
       </body>
     </html>
   );

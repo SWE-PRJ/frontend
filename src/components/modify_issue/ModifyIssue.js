@@ -1,11 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
-import styles from '../../app/modify_issue/[issue]/page.module.css';
+import styles from '../../app/modify_issue/[issueID]/page.module.css';
 import { useRouter, useParams } from 'next/navigation';
 
 const issues = {
   project1: [
-      { issueID: 'issue1', title: 'issue11111', state: 'new', priority: 'major', description: '이러쿵저러쿵설명11' },
+      { issueID: 'issue1', title: 'issue11111', state: 'resolved', priority: 'major', description: '이러쿵저러쿵설명11', fixer: 'tester1', assignee: 'dev2' },
       { issueID: 'issue2', title: 'issue22222', state: 'assigned', priority: 'minor', description: '이러쿵저쩌쿵설명22' },
   ],
   project2: [

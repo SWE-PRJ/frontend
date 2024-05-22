@@ -11,6 +11,9 @@ header {
   align-items: center;
   padding: 10px 20px;
   background-color: #f5e0dc;
+  height: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
 }
 
 .header-left {
@@ -44,6 +47,7 @@ header {
 h1 {
   margin: 0;
   font-size: 1.5rem;
+  cursor: pointer;
 }
 
 main {
@@ -52,5 +56,49 @@ main {
   justify-content: center;
   align-items: center;
   text-align: center;
-  min-height: calc(100vh - 50px); /* Adjusted for header height */
+  min-height: calc(100vh - 50px);
+}
+
+.sidebar {
+  position: fixed;
+  top: 50px;
+  left: -250px;
+  width: 250px;
+  height: calc(100% - 50px);
+  background-color: #f8f9fa;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  padding-top: 10px;
+  transition: left 0.3s ease;
+  z-index: 999;
+}
+
+.sidebar.visible {
+  left: 0;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  padding: 15px 20px;
+  cursor: pointer;
+}
+
+.sidebar ul li:hover {
+  background-color: #e9ecef;
+}
+
+main.sidebar-visible {
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar-section {
+  margin-bottom: 20px;
+}
+
+.sidebar-section-lower {
+  border-top: 1px solid #ccc;
 }
