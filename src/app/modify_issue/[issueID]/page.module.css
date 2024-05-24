@@ -116,20 +116,20 @@
     align-self: flex-end;
     padding: 0.5rem 1rem;
     border: none;
-    background-color: #0070f3;
+    background-color: #418ad8;
     color: white;
     border-radius: 4px;
     cursor: pointer;
   }
   
   .addComment button:hover {
-    background-color: #005bb5;
+    background-color: #70abe6;
   }
   
   .issueModify {
     padding: 0.5rem 1rem;
     border: none;
-    background-color: #0070f3;
+    background-color: #418ad8;
     color: white;
     border-radius: 4px;
     cursor: pointer;
@@ -137,6 +137,6 @@
   }
   
   .issueModify:hover {
-    background-color: #005bb5;
+    background-color: #70abe6;
   }
   

@@ -1,4 +1,4 @@
-  .container {
+.container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -94,25 +94,4 @@
   .tableWrapper {
     position: relative;
     width: 100%;
-  }
-
-  .searchOptions {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .searchSelect {
-    border: 1px solid #ccc;
-    padding: 5px 10px;
-    border-radius: 5px;
-    background-color: transparent;
-    margin-right: 10px;
-  }
-  
-  .searchInput {
-    border: 1px solid #ccc;
-    padding: 5px 10px;
-    border-radius: 5px;
-    width: 200px;
   }
