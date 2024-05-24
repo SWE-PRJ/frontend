@@ -1,5 +1,6 @@
 'use client';
-import styles from '../../app/browse_issue/page.module.css'; // 스타일 경로 확인 필요
+import { useState } from 'react';
+import styles from '../../app/browse_issue/page.module.css';
 import { useRouter } from 'next/navigation';
 
 const allIssues = [
@@ -11,6 +12,18 @@ const allIssues = [
 
 export default function BrowseAllIssues() {
   const router = useRouter();
+  const [search, setSearch] = useState('');
+  const [searchType, setSearchType] = useState('all');
+
+  const filteredIssues = allIssues.filter(issue => {
+    if (searchType === 'all') {
+      return issue.project.toLowerCase().includes(search.toLowerCase()) ||
+             issue.title.toLowerCase().includes(search.toLowerCase()) ||
+             issue.state.toLowerCase().includes(search.toLowerCase()) ||
+             issue.priority.toLowerCase().includes(search.toLowerCase());
+    }
+    return issue[searchType].toLowerCase().includes(search.toLowerCase());
+  });
 
   const handleClickIssue = (issueID) => {
     router.push(`/modify_issue/${issueID}`);
@@ -21,6 +34,24 @@ export default function BrowseAllIssues() {
       <main className={styles.main}>
         <h1>All Projects Issues</h1>
         <br></br>
+        <div className={styles.controls}>
+          <div className={styles.searchOptions}>
+            <select value={searchType} onChange={(e) => setSearchType(e.target.value)} className={styles.searchSelect}>
+              <option value="all">All</option>
+              <option value="project">Project</option>
+              <option value="title">Title</option>
+              <option value="state">State</option>
+              <option value="priority">Priority</option>
+            </select>
+            <input
+              type="text"
+              placeholder="Enter search term"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className={styles.searchInput}
+            />
+          </div>
+        </div>
         <div className={styles.tableWrapper}>
           <table className={styles.table}>
             <thead>
@@ -33,7 +64,7 @@ export default function BrowseAllIssues() {
               </tr>
             </thead>
             <tbody>
-              {allIssues.map(issue => (
+              {filteredIssues.map(issue => (
                 <tr key={issue.issueID} onClick={() => handleClickIssue(issue.issueID)} className={styles.row}>
                   <td>{issue.project}</td>
                   <td>{issue.title}</td>

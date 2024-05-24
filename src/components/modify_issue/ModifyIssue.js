@@ -15,6 +15,7 @@ const issues = {
 };
 
 export default function ModifyIssue() {
+  const router = useRouter();
   const [issue, setIssue] = useState(null);
   const [state, setState] = useState('');
   const [assignee, setAssignee] = useState('');
@@ -38,6 +39,15 @@ export default function ModifyIssue() {
       }
     }
   }, [issueID]);
+
+  const handleDeleteIssue = () => {
+    const projectKey = Object.keys(issues).find(key => issues[key].some(i => i.issueID === issueID));
+    if (projectKey) {
+      const updatedIssues = issues[projectKey].filter(i => i.issueID !== issueID);
+      issues[projectKey] = updatedIssues;
+      router.push('/browse_project');
+    }
+  };
 
   const handleStateChange = (event) => {
     setState(event.target.value);
@@ -74,8 +84,10 @@ export default function ModifyIssue() {
         <div className={styles.issueDetails}>
           <div className={styles.issueHeader}>
             <div>
-              <span>{issue.title}</span>
+              <h1>/{issue.title}</h1>
+              <div  className={styles.issueHeaderRight}>
               <span>{issue.date} {issue.user}</span>
+              </div>
             </div>
             <div>
               <span>Priority: {issue.priority}</span>
@@ -109,9 +121,9 @@ export default function ModifyIssue() {
           </div>
           <div className={styles.comments}>
             {comments.map((comment, index) => (
-              <div key={index} className={styles.comment}>
-                <span>{comment.date} {comment.user}</span>
-                <input readOnly value={comment.text} />
+              <div key={index} className={styles.commentContainer}>
+                <input readOnly className={styles.commentText} value={comment.text} />
+                <span className={styles.commentInfo}>{comment.date} {comment.user}</span>
               </div>
             ))}
             <div className={styles.addComment}>
@@ -124,6 +136,7 @@ export default function ModifyIssue() {
             </div>
           </div>
           <button className={styles.issueModify}>Issue modify</button>
+          <button onClick={handleDeleteIssue} className={styles.issueDelete}>Delete Issue</button>
         </div>
       </main>
     </div>

@@ -25,6 +25,9 @@ export default function CreateIssue() {
 
   return (
     <div className={styles.container}>
+      <div className={styles.header}>
+        <h1>New Issue</h1>
+      </div>
       <main className={styles.main}>
         <div className={styles.form}>
           <input

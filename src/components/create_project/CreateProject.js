@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import styles from '../../app/create_project/page.module.css'; // Ensure the path to your CSS module is correct
 
 export default function CreateProject() {
   const [projectName, setProjectName] = useState('');
@@ -24,40 +25,44 @@ export default function CreateProject() {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>New Project</h1>
-      <br></br>
-      <div style={{ marginBottom: '20px' }}>
-        <input
-          type="text"
-          placeholder="Project name"
-          value={projectName}
-          onChange={(e) => setProjectName(e.target.value)}
-          style={{ padding: '8px', width: '300px', marginBottom: '10px', display: 'block' }}
-        />
-        <input
-          type="text"
-          placeholder="Member name"
-          value={memberName}
-          onChange={(e) => setMemberName(e.target.value)}
-          style={{ padding: '8px', width: '300px', marginBottom: '10px', display: 'block' }}
-        />
-        <br></br>
-        <button onClick={handleAddMember} style={{ padding: '8px 16px', marginBottom: '20px' }}>
-          Invite member
-        </button>
-        <button onClick={handleCreateProject} style={{ padding: '8px 16px' }}>
-          + Project create
-        </button>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1>New Project</h1>
       </div>
-      <div>
-        <h3>Invited Members</h3>
-        <ul>
-          {invitedMembers.map((member, index) => (
-            <li key={index}>{member}</li>
-          ))}
-        </ul>
-      </div>
+      <main className={styles.main}>
+        <div className={styles.form}>
+          <input
+            type="text"
+            placeholder="Project name"
+            value={projectName}
+            onChange={(e) => setProjectName(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Member name"
+            value={memberName}
+            onChange={(e) => setMemberName(e.target.value)}
+          />
+          <div className={styles.buttonContainer}>
+            <div className={styles.buttonGroup}> {/* Add this wrapper */}
+              <button onClick={handleAddMember}>
+                Invite member
+              </button>
+              <button onClick={handleCreateProject}>
+                + Create Project
+              </button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3>Invited Members</h3>
+          <ul>
+            {invitedMembers.map((member, index) => (
+              <li key={index}>{member}</li>
+            ))}
+          </ul>
+        </div>
+      </main>
     </div>
   );
 }
