@@ -2,15 +2,16 @@
 import { useState, useEffect } from 'react';
 import styles from '../../app/modify_issue/[issueID]/page.module.css';
 import { useRouter, useParams } from 'next/navigation';
+import { TrashBin, Pencil, CheckmarkDoneCircle } from 'react-ionicons';
 
 const issues = {
   project1: [
-      { issueID: 'issue1', title: 'issue11111', state: 'resolved', priority: 'major', description: '이러쿵저러쿵설명11', fixer: 'tester1', assignee: 'dev2' },
-      { issueID: 'issue2', title: 'issue22222', state: 'assigned', priority: 'minor', description: '이러쿵저쩌쿵설명22' },
+    { issueID: 'issue1', title: 'issue11111', state: 'resolved', priority: 'major', description: '이러쿵저러쿵설명11', fixer: 'tester1', assignee: 'dev2' },
+    { issueID: 'issue2', title: 'issue22222', state: 'assigned', priority: 'minor', description: '이러쿵저쩌쿵설명22' },
   ],
   project2: [
-      { issueID: 'issue3', title: 'issue33333', state: 'new', priority: 'major', description: '이러쿵저러쿵설명33' },
-      { issueID: 'issue4', title: 'issue44444', state: 'assigned', priority: 'minor', description: '이러쿵저러쿵설명44' },
+    { issueID: 'issue3', title: 'issue33333', state: 'new', priority: 'major', description: '이러쿵저러쿵설명33' },
+    { issueID: 'issue4', title: 'issue44444', state: 'assigned', priority: 'minor', description: '이러쿵저러쿵설명44' },
   ],
 };
 
@@ -24,6 +25,9 @@ export default function ModifyIssue() {
     { date: '2024/05/17', user: 'dev1', text: '수정했습니다' }
   ]);
   const [newComment, setNewComment] = useState('');
+  const [editingCommentIndex, setEditingCommentIndex] = useState(null);
+  const [editingCommentText, setEditingCommentText] = useState('');
+  const [selectedCommentIndex, setSelectedCommentIndex] = useState(null);
   const { issueID } = useParams();
 
   useEffect(() => {
@@ -68,10 +72,37 @@ export default function ModifyIssue() {
     setIssue(updatedIssue);
     setComments(newComments);
     setNewComment('');
+  };
 
-    // const storedIssues = JSON.parse(localStorage.getItem('issues')) || {};
-    // storedIssues[issueID] = updatedIssue;
-    // localStorage.setItem('issues', JSON.stringify(storedIssues));
+  const handleEditComment = (index) => {
+    setEditingCommentIndex(index);
+    setEditingCommentText(comments[index].text);
+  };
+
+  const handleUpdateComment = () => {
+    const updatedComments = comments.map((comment, index) => (
+      index === editingCommentIndex ? { ...comment, text: editingCommentText } : comment
+    ));
+    const updatedIssue = { ...issue, comments: updatedComments };
+    setIssue(updatedIssue);
+    setComments(updatedComments);
+    setEditingCommentIndex(null);
+    setEditingCommentText('');
+  };
+
+  const handleDeleteComment = (index) => {
+    const updatedComments = comments.filter((_, i) => i !== index);
+    const updatedIssue = { ...issue, comments: updatedComments };
+    setIssue(updatedIssue);
+    setComments(updatedComments);
+  };
+
+  const toggleCommentSelection = (index) => {
+    if (selectedCommentIndex === index) {
+      setSelectedCommentIndex(null); // 이미 선택된 코멘트를 다시 클릭하면 선택 해제
+    } else {
+      setSelectedCommentIndex(index); // 새로운 코멘트 선택
+    }
   };
 
   if (!issue) {
@@ -85,8 +116,8 @@ export default function ModifyIssue() {
           <div className={styles.issueHeader}>
             <div>
               <h1>/{issue.title}</h1>
-              <div  className={styles.issueHeaderRight}>
-              <span>{issue.date} {issue.user}</span>
+              <div className={styles.issueHeaderRight}>
+                <span>{issue.date} {issue.user}</span>
               </div>
             </div>
             <div>
@@ -120,10 +151,41 @@ export default function ModifyIssue() {
             </div>
           </div>
           <div className={styles.comments}>
-            {comments.map((comment, index) => (
-              <div key={index} className={styles.commentContainer}>
-                <input readOnly className={styles.commentText} value={comment.text} />
-                <span className={styles.commentInfo}>{comment.date} {comment.user}</span>
+          {comments.map((comment, index) => (
+              <div 
+                key={index} 
+                className={styles.commentContainer}
+                onClick={() => toggleCommentSelection(index)}
+              >
+                {editingCommentIndex === index ? (
+                  <>
+                    <textarea
+                      value={editingCommentText}
+                      onChange={(e) => setEditingCommentText(e.target.value)}
+                    />
+                    <CheckmarkDoneCircle
+                      className={`${styles.icon} ${styles.checkIcon}`}
+                      onClick={handleUpdateComment}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <input readOnly className={styles.commentText} value={comment.text} />
+                    <span className={styles.commentInfo}>{comment.date} {comment.user}</span>
+                    {selectedCommentIndex === index && (
+                      <div className={styles.commentIcons}>
+                        <Pencil
+                          className={styles.icon}
+                          onClick={() => handleEditComment(index)}
+                        />
+                        <TrashBin
+                          className={styles.icon}
+                          onClick={() => handleDeleteComment(index)}
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
             ))}
             <div className={styles.addComment}>
