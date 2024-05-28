@@ -55,7 +55,7 @@ export default function RootLayout({ children }) {
           </div>
           <div className="sidebar-section sidebar-section-lower">
             <ul>
-              <li onClick={() => navigateTo('/analysis')}>Analysis</li>
+              <li onClick={() => navigateTo('/analysis_issue')}>Analysis</li>
               {/* <li onClick={() => navigateTo('/settings')}>Settings</li> */}
             </ul>
           </div>
