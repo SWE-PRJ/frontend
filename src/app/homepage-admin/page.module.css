@@ -7,24 +7,36 @@
     height: 100vh;
 }
 
-.arrow {
+.createAccountButton {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s; 
+}
+
+.createAccountButton:hover {
+    background-color: #0056b3;
+}
+
+.plus {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
 }
 
-.arrow span {
+.plus span {
     font-size: 2rem;
     margin-right: 10px;
 }
 
-.arrow a {
-    font-size: 1.5rem;
-    text-decoration: none;
-    color: black;
+.footer {
+    margin-top: 40px;
 }
 
-.footer {
-    margin-top: 20px;
+.footer p {
+    margin-top: 50px;
 }
