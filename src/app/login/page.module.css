@@ -31,10 +31,3 @@
   .container .button:hover {
     background-color: #a52a2a;
   }
-  
-  .container .createAccount {
-    margin-top: 10px;
-    color: #ff6347;
-    text-decoration: none;
-  }
-  

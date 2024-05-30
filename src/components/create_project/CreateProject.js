@@ -6,7 +6,7 @@ import { CreateProjectAPI } from '@/api/ProjectAPI';
 export default function CreateProject() {
   const [projectName, setProjectName] = useState('');
   const [memberName, setMemberName] = useState('');
-  const [invitedMembers, setInvitedMembers] = useState(['kimju0', 'Yejin22']);
+  const [invitedMembers, setInvitedMembers] = useState([]);
 
   const handleAddMember = () => {
     if (memberName && !invitedMembers.includes(memberName)) {
@@ -15,12 +15,12 @@ export default function CreateProject() {
     }
   };
 
-  const handleCreateProject = () => {
+  const handleCreateProject = async () => {
     if (projectName) {
-      CreateProjectAPI();
+      CreateProjectAPI(projectName);
       alert(`Project "${projectName}" created with members: ${invitedMembers.join(', ')}`);
       setProjectName('');
-      setInvitedMembers(['kimju0', 'Yejin22']);
+      setInvitedMembers([]);
     } else {
       alert('Please enter a project name.');
     }

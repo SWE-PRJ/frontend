@@ -6,21 +6,27 @@ import { loginAPI } from '@/api/LoginAPI';
 
 export default function Login() {
   const router = useRouter();
-  const [username, setUsername] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // 인증 로직
-    loginAPI();
-    if (username == 'admin' && password) {
+    const response = await loginAPI(identifier, password);
+    console.log(response);
+    if (response == false) {
+      alert('아이디 혹은 비밀번호가 일치하지 않습니다.');
+    }
+    else if (response.status == 500) {
+      alert('아이디 혹은 비밀번호가 일치하지 않습니다.');
+    }
+    else if (response.status == 200 ) {
+      console.log("wowoww");
+      console.log(response.data.id);
       router.push('/homepage-admin');
     }
-    else if (username == 'other' && password) {
+    else if (response.status == 200) {
       router.push('/homepage-other');
-    }
-    else {
-      alert('wrong username or password');
     }
   };
 
@@ -30,9 +36,9 @@ export default function Login() {
       <form onSubmit={handleSubmit} className={styles.form}>
         <input
           type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Identifier"
+          value={identifier}
+          onChange={(e) => setIdentifier(e.target.value)}
           className={styles.input}
         />
         <input
@@ -44,7 +50,6 @@ export default function Login() {
         />
         <button type="submit" className={styles.button}>Sign in</button>
       </form>
-      <a href="/create_account" className={styles.createAccount}>create an account</a>
     </div>
   );
 }
