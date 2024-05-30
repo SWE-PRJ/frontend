@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import styles from '../../app/create_project/page.module.css'; // Ensure the path to your CSS module is correct
+import { CreateProjectAPI } from '@/api/ProjectAPI';
 
 export default function CreateProject() {
   const [projectName, setProjectName] = useState('');
@@ -16,6 +17,7 @@ export default function CreateProject() {
 
   const handleCreateProject = () => {
     if (projectName) {
+      CreateProjectAPI();
       alert(`Project "${projectName}" created with members: ${invitedMembers.join(', ')}`);
       setProjectName('');
       setInvitedMembers(['kimju0', 'Yejin22']);
