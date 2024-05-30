@@ -19,3 +19,16 @@ export const loginAPI = async (identifier, password) => {
   console.log('Header', ApiManager.defaults.headers);
   return response;
 };
+
+export const registerAPI = async (name, identifier, password, role, adminIdentifier) => {
+  const body = {
+    name: name,
+    identifier: identifier,
+    password: password
+  }
+  const response =
+    await ApiManager.post(
+      `/admin/register?role=${role}&adminIdentifier=${adminIdentifier}`, body
+    );
+  return response.data;
+};
