@@ -24,4 +24,4 @@ export const registerAPI = async (name, identifier, password, role, adminIdentif
       `/admin/register?role=${role}&adminIdentifier=${adminIdentifier}`, body
     );
   return response.data;
-}
+};
