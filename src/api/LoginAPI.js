@@ -2,7 +2,7 @@ import ApiManager from "./apiManager";
 
 export const loginAPI = async () => {
   const body = {
-    identifier: "admin",
+    identifier: "juyoung",
     password: "1234",
   };
   const response = await ApiManager.post("/login", body);
@@ -12,3 +12,16 @@ export const loginAPI = async () => {
   console.log('Header', ApiManager.defaults.headers);
   return response.data;
 };
+
+export const registerAPI = async (name, identifier, password, role, adminIdentifier) => {
+  const body = {
+    name: name,
+    identifier: identifier,
+    password: password
+  }
+  const response =
+    await ApiManager.post(
+      `/admin/register?role=${role}&adminIdentifier=${adminIdentifier}`, body
+    );
+  return response.data;
+}
