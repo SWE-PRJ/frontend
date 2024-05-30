@@ -11,6 +11,7 @@ export default function CreateProject() {
   const handleAddMember = () => {
     if (memberName && !invitedMembers.includes(memberName)) {
       setInvitedMembers([...invitedMembers, memberName]);
+      // ProjectUserAPI(projectName, memberName)
       setMemberName('');
     }
   };
