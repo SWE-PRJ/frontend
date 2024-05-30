@@ -5,7 +5,7 @@ import styles from '../../app/create_account/page.module.css';
 
 export default function CreateAccount() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  const [id, setID] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
@@ -13,7 +13,7 @@ export default function CreateAccount() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // 수정 필요
-    if (email && username && password) {
+    if (id && username && password) {
       router.push('/');
     }
   };
@@ -24,12 +24,11 @@ export default function CreateAccount() {
 
   return (
     <div className={styles.container}>
-      <h2>회원가입</h2>
+      <h2>계정 등록</h2>
       <div className={styles.role}>
         <div>
           <label htmlFor="role">Role</label>
           <select id="role" value={role} onChange={handleRoleChange}>
-            <option value="admin">Admin</option>
             <option value="tester">Tester</option>
             <option value="developer">Developer</option>
             <option value="pl">PL</option>
@@ -38,10 +37,10 @@ export default function CreateAccount() {
       </div>
       <form onSubmit={handleSubmit} className={styles.form}>
         <input
-          type="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="text"
+          placeholder="Enter your identifier"
+          value={id}
+          onChange={(e) => setID(e.target.value)}
           className={styles.input}
         />
         <input

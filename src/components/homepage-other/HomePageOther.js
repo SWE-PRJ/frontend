@@ -19,7 +19,7 @@ export default function HomePageOther() {
                     <span>My project</span>
             </div>
             <footer className={styles.footer}>
-                <p>Our page is made by juyoung Kim, youngkyuong Bae, sangyoon Lee, heaseung Lee, yejin Choi (스펠링수정)</p>
+                <p>Our page is made by juyoung Kim, youngkyeong Bae, sangyun Lee, haeseung Lee, yejin Choi</p>
             </footer>
         </div>
     );

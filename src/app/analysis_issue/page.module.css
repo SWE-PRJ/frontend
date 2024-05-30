@@ -65,12 +65,13 @@
   
   .bar span {
     position: absolute;
-    top: -20px;
+    top: -30px;
     width: 50%;
     transform: translateX(-50%);
     width: auto;
     text-align: center;
     font-size: 15px;
+    white-space: nowrap;
   }
   
   .barLabel {
@@ -88,10 +89,31 @@
     width: 100%;
     text-align: center;
     font-size: 12px;
+    white-space: nowrap;
   }
   
   .lineChart {
     width: 200%;
     height: 250px;
+  }
+  
+  .dateSelector label {
+    font-family: 'Arial', sans-serif; 
+    color: #333;
+    margin-right: 20px;
+  }
+  
+  .dateSelector input[type="month"] {
+    font-family: 'Arial', sans-serif; 
+    margin-left: 10px;
+    margin-top: 5px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #666;
+  }
+  
+  .dateSelector input[type="month"]:hover {
+    border-color: #888;
   }
   
