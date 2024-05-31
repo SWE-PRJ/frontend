@@ -13,21 +13,25 @@ export default function Login() {
     e.preventDefault();
     // 인증 로직
     const response = await loginAPI(identifier, password);
-    console.log(response);
-    if (response == false) {
+    // console.log(response);
+    if (response == false || response.status == 500) {
       alert('아이디 혹은 비밀번호가 일치하지 않습니다.');
     }
-    else if (response.status == 500) {
-      alert('아이디 혹은 비밀번호가 일치하지 않습니다.');
-    }
-    else if (response.status == 200 ) {
-      console.log("wowoww");
-      console.log(response.data.id);
+    else if (response.status == 200 && response.data.id == 4) {
+      console.log(response.status);
       router.push('/homepage-admin');
     }
-    else if (response.status == 200) {
+    else {
       router.push('/homepage-other');
-    }
+    } // role 추가되면 아래거로
+    // else if (response.status == 200) {
+    //   const role = localStorage.getItem('role');
+    //   if (role === 'admin') {
+    //     router.push('/homepage-admin');
+    //   } else {
+    //     router.push('/homepage-other');
+    //   }
+    // }
   };
 
   return (

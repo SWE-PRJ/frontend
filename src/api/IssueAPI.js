@@ -8,6 +8,9 @@ export const createIssueAPI = async (title, description, reporterId, priority, p
         priority: priority
     }
     const response = await ApiManager.post(`/api/projects/${projectId}/issues`, body);
+    // localStorage.setItem("projectID", projectId);
+    console.log("This is createIssueAPI" + response.data);
+
     return response.data;
 }
 
