@@ -8,14 +8,15 @@ export default function CreateIssue() {
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('major');
   const [comment, setComment] = useState('');
-  // const [userRole, setUserRole] = useState('');
+  // 이름도 추가해야됨
+  const [userRole, setUserRole] = useState('');
   const [userID, setUserID] = useState('');
   // const [projectID, setProjectID] = useState('');
 
-  // useEffect(() => {
-  //   const role = localStorage.getItem('role');
-  //   setUserRole(role);
-  // }, []);
+  useEffect(() => {
+    const userRole = localStorage.getItem('role');
+    setUserRole(userRole);
+  }, []);
 
   useEffect(() => {
     const userID = localStorage.getItem('id');
@@ -34,7 +35,7 @@ export default function CreateIssue() {
       title,
       description,
       priority,
-      comments: [{ user: 'tester', date: new Date().toISOString().split('T')[0], text: comment }]
+      comments: [{ user: userRole, date: new Date().toISOString().split('T')[0], text: comment }]
     };
 
     localStorage.setItem('issue', JSON.stringify(newIssue));
