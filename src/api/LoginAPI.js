@@ -1,5 +1,6 @@
 import ApiManager from "./apiManager";
 
+//로그인
 export const loginAPI = async (identifier, password) => {
   const body = {
     identifier: identifier,
@@ -22,6 +23,7 @@ export const loginAPI = async (identifier, password) => {
   return response;
 };
 
+//계정등록(회원가입)
 export const registerAPI = async (name, identifier, password, role, adminIdentifier) => {
   const body = {
     name: name,

@@ -1,5 +1,6 @@
 import ApiManager from "./apiManager"
 
+//이슈 생성
 export const createIssueAPI = async (title, description, reporterId, priority, projectId) => {
     const body = {
         title: title,
@@ -14,11 +15,13 @@ export const createIssueAPI = async (title, description, reporterId, priority, p
     return response.data;
 }
 
+//프로젝트에 속한 이슈 검색
 export const getProjectIssuesAPI = async (projectId) => {
     const response = await ApiManager.get("/api/projects/" + projectId + "/issues");
     return response.data;
 }
 
+//할당된 이슈 검색
 export const getUserIssueAPI = async (userId) => {
     const response = await ApiManager.get("/api/users/" + userId + "/issues");
     return response.data;
