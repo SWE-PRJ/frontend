@@ -12,3 +12,11 @@ export const createCommentAPI = async (issueId, userId, content) => {
   );
   return response.data;
 };
+
+//단일 코멘트 조회
+export const getDetailCommentAPI = async (issueId, commentId) => {
+  const response = await ApiManager.get(
+    `/api/issues/${issueId}/comments/${commentId}`
+  );
+  return response.data;
+}
