@@ -37,6 +37,21 @@
     color: #ff6347;
     text-decoration: none;
   }
+
+  .container .createProject {
+    width: 220px;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #377cd1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .container .createProject:hover {
+    background-color: #4c99d8;
+  }
   
   .role {
     display: flex;
