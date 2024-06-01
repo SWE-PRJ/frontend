@@ -1,5 +1,6 @@
 import ApiManager from "./apiManager";
 
+//프로젝트 생성
 export const CreateProjectAPI = async (projectName) => {
     const params = {
         name: projectName,
