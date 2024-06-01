@@ -1,21 +1,45 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '../../app/create_issue/page.module.css';
+import { createIssueAPI } from '@/api/IssueAPI';
 
 export default function CreateIssue() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('major');
   const [comment, setComment] = useState('');
+  // const [userRole, setUserRole] = useState('');
+  const [userID, setUserID] = useState('');
+  // const [projectID, setProjectID] = useState('');
 
-  const handleCreateIssue = () => {
+  // useEffect(() => {
+  //   const role = localStorage.getItem('role');
+  //   setUserRole(role);
+  // }, []);
+
+  useEffect(() => {
+    const userID = localStorage.getItem('id');
+    setUserID(userID);
+  }, []);
+
+  // useEffect(() => {
+  //   const projectID = localStorage.getItem('projectID');
+  //   setProjectID(projectID);
+  // }, []);
+
+  const projectID = 1;
+
+  const handleCreateIssue = async () => {
     const newIssue = {
       title,
       description,
       priority,
       comments: [{ user: 'tester', date: new Date().toISOString().split('T')[0], text: comment }]
     };
+
     localStorage.setItem('issue', JSON.stringify(newIssue));
+    await createIssueAPI(title, description, userID, priority, projectID);
+    console.log(userID);
     alert('Issue created!');
     setTitle('');
     setDescription('');
