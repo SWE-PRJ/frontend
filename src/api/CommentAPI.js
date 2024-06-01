@@ -40,3 +40,9 @@ export const updateCommentAPI = async (issueId, commentId, content) => {
   );
   return response.data;
 };
+
+//코멘트 전체 조회
+export const getCommentsAPI = async (issueId) => {
+  const response = await ApiManager.get(`/api/issues/${issueId}/comments`);
+  return response.data;
+}

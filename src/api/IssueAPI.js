@@ -49,3 +49,17 @@ export const changeIssueStateAPI = async (projectId, issueId, state) => {
   );
   return response.data;
 };
+
+//이슈 통계 분석
+export const getIssueStatisticsAPI = async (projectId, startDate, endDate) => {
+  const response = await ApiManager.get(
+    `/api/projects/${projectId}/issues/statistics?startDate=${startDate}&endDate=${endDate}`
+  );
+  return response.data;
+};
+
+//이슈 상세정보 확인
+export const getIssueDetailAPI = async (issueId) => {
+  const response = await ApiManager.get(`/api/issues/${issueId}`);
+  return response.data;
+};

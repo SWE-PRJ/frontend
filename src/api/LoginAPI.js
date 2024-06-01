@@ -24,7 +24,13 @@ export const loginAPI = async (identifier, password) => {
 };
 
 //계정등록(회원가입)
-export const registerAPI = async (name, identifier, password, role, adminIdentifier) => {
+export const registerAPI = async (
+  name,
+  identifier,
+  password,
+  role,
+  adminIdentifier
+) => {
   const body = {
     name: name,
     identifier: identifier,
