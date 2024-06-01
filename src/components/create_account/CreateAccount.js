@@ -2,20 +2,49 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import styles from '../../app/create_account/page.module.css';
+import { registerAPI } from '@/api/LoginAPI';
 
 export default function CreateAccount() {
   const router = useRouter();
-  const [id, setID] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('');
+  var [role, setRole] = useState('tester');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // 수정 필요
-    if (id && username && password) {
-      router.push('/');
+    const userIdentifier = localStorage.getItem('useridentifier');
+    var adminIdentifier;
+    const userrole = localStorage.getItem('role');
+    if (userrole == 'ROLE_ADMIN') {
+      adminIdentifier = userIdentifier;
     }
+    if (role == 'developer') {
+      role = 'dev';
+    }
+    try {
+      const response = await registerAPI(username, identifier, password, role, adminIdentifier);
+      setIdentifier('');
+      setUsername('');
+      setPassword('');
+      setRole('tester');
+    } catch (e) {
+      if (e == "Error: 이미 존재하는 아이디") {
+        alert("이미 존재하는 아이디입니다.");
+        setIdentifier('');
+        setUsername('');
+        setPassword('');
+        setRole('tester');
+      }
+      else {
+        alert("error");
+      }
+    }
+  };
+
+  const handleCreateProject = async () => {
+    router.push('/create_project');
   };
 
   const handleRoleChange = (event) => {
@@ -29,8 +58,8 @@ export default function CreateAccount() {
         <div>
           <label htmlFor="role">Role</label>
           <select id="role" value={role} onChange={handleRoleChange}>
-            <option value="tester">Tester</option>
-            <option value="developer">Developer</option>
+            <option value="tester">tester</option>
+            <option value="developer">developer</option>
             <option value="pl">PL</option>
           </select>
         </div>
@@ -39,8 +68,8 @@ export default function CreateAccount() {
         <input
           type="text"
           placeholder="Enter your identifier"
-          value={id}
-          onChange={(e) => setID(e.target.value)}
+          value={identifier}
+          onChange={(e) => setIdentifier(e.target.value)}
           className={styles.input}
         />
         <input
@@ -58,8 +87,8 @@ export default function CreateAccount() {
           className={styles.input}
         />
         <button type="submit" className={styles.button}>Create account</button>
-      </form>
-      
+        <button className={styles.createProject} onClick={handleCreateProject}>+ create project</button>
+      </form>   
     </div>
   );
 }

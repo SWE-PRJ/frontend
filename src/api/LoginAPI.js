@@ -17,11 +17,9 @@ export const loginAPI = async (identifier, password) => {
   console.log(response.data.token);
   localStorage.setItem("token", response.data.token);
   localStorage.setItem("id", response.data.id);
-  // localStorage.setItem("role", role);
-  ApiManager.defaults.headers.common[
-    "Authorization"
-  ] = `Bearer ${response.data.token}`;
-  console.log("Header", ApiManager.defaults.headers);
+  localStorage.setItem("role", response.data.role);
+  ApiManager.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
+  console.log('Header', ApiManager.defaults.headers);
   return response;
 };
 
@@ -36,11 +34,20 @@ export const registerAPI = async (
   const body = {
     name: name,
     identifier: identifier,
-    password: password,
-  };
-  const response = await ApiManager.post(
-    `/admin/register?role=${role}&adminIdentifier=${adminIdentifier}`,
-    body
-  );
-  return response.data;
+    password: password
+  }
+  var response;
+
+  try {
+    response =
+    await ApiManager.post(
+      `/admin/register?role=${role}&adminIdentifier=${adminIdentifier}`, body
+    );
+  } catch (error) {
+    if (error.response.data.errorCode == 500) {
+      throw new Error("이미 존재하는 아이디");
+    }
+    else {}
+  }
+  return response;
 };

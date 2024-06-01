@@ -3,7 +3,7 @@ import styles from '../../app/browse_project/page.module.css';
 import { useRouter } from 'next/navigation';
 
 const projects = [
-  { projectID: 'project1', project: 'project1', members: ['jy','yj'] }
+  { projectID: 1, project: 1, members: ['jy','yj'] }
 ];
 
 export default function BrowseProject() {
@@ -11,6 +11,7 @@ export default function BrowseProject() {
   const handleClickProject = (projectID) => {
     router.push(`/browse_issue/${projectID}`);
   }
+
   return (
     <div className={styles.container}>
       <main className={styles.main}>
