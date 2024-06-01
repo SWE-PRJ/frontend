@@ -18,21 +18,29 @@ export const loginAPI = async (identifier, password) => {
   localStorage.setItem("token", response.data.token);
   localStorage.setItem("id", response.data.id);
   // localStorage.setItem("role", role);
-  ApiManager.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
-  console.log('Header', ApiManager.defaults.headers);
+  ApiManager.defaults.headers.common[
+    "Authorization"
+  ] = `Bearer ${response.data.token}`;
+  console.log("Header", ApiManager.defaults.headers);
   return response;
 };
 
 //계정등록(회원가입)
-export const registerAPI = async (name, identifier, password, role, adminIdentifier) => {
+export const registerAPI = async (
+  name,
+  identifier,
+  password,
+  role,
+  adminIdentifier
+) => {
   const body = {
     name: name,
     identifier: identifier,
-    password: password
-  }
-  const response =
-    await ApiManager.post(
-      `/admin/register?role=${role}&adminIdentifier=${adminIdentifier}`, body
-    );
+    password: password,
+  };
+  const response = await ApiManager.post(
+    `/admin/register?role=${role}&adminIdentifier=${adminIdentifier}`,
+    body
+  );
   return response.data;
 };
