@@ -37,9 +37,14 @@ export default function CreateAccount() {
         setPassword('');
         setRole('tester');
       }
-      alert("error");
+      else {
+        alert("error");
+      }
     }
+  };
 
+  const handleCreateProject = async () => {
+    router.push('/create_project');
   };
 
   const handleRoleChange = (event) => {
@@ -82,8 +87,8 @@ export default function CreateAccount() {
           className={styles.input}
         />
         <button type="submit" className={styles.button}>Create account</button>
-      </form>
-      
+        <button className={styles.createProject} onClick={handleCreateProject}>+ create project</button>
+      </form>   
     </div>
   );
 }

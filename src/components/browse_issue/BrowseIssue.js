@@ -1,27 +1,33 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '../../app/browse_issue/[project]/page.module.css';
 import { useRouter, useParams } from 'next/navigation';
-
-const issues = {
-  project1: [
-    { issueID: 'issue1', title: 'issue11111', state: 'new', priority: 'major', description: '이러쿵저러쿵설명11' },
-    { issueID: 'issue2', title: 'issue22222', state: 'assigned', priority: 'minor', description: '이러쿵저러쿵설명22' },
-  ],
-  project2: [
-    { issueID: 'issue3', title: 'issue33333', state: 'new', priority: 'major', description: '이러쿵저러쿵설명33' },
-    { issueID: 'issue4', title: 'issue44444', state: 'assigned', priority: 'minor', description: '이러쿵저러쿵설명44' },
-  ]
-};
+import { getProjectIssuesAPI } from '@/api/IssueAPI';
 
 export default function BrowseIssue() {
   const router = useRouter();
   const { project } = useParams();
   const [search, setSearch] = useState('');
   const [searchType, setSearchType] = useState('all');
-  const projectIssues = issues[project] || [];
+  const [issues, setIssues] = useState([]);
 
-  const filteredIssues = projectIssues.filter(issue => {
+  useEffect(() => {
+    const fetchIssues = async () => {
+      try {
+        const response = await getProjectIssuesAPI(project);
+        console.log('Fetched issues:', response);
+        setIssues(response.issues);
+      } catch (error) {
+        console.error('Error fetching issues:', error);
+      }
+    };
+
+    if (project) {
+      fetchIssues();
+    }
+  }, [project]);
+
+  const filteredIssues = issues.filter(issue => {
     if (searchType === 'all') {
       return issue.title.toLowerCase().includes(search.toLowerCase()) ||
              issue.state.toLowerCase().includes(search.toLowerCase()) ||
@@ -30,8 +36,10 @@ export default function BrowseIssue() {
     return issue[searchType].toLowerCase().includes(search.toLowerCase());
   });
 
-  const handleClickIssue = (issueID) => {
-    router.push(`/modify_issue/${issueID}`);
+  const handleClickIssue = (issue) => {
+    localStorage.setItem('selectedIssue', JSON.stringify(issue));
+    console.log(issue);
+    router.push(`/modify_issue/${issue.id}`);
   };
 
   const handleCreateIssue = () => {
@@ -77,14 +85,20 @@ export default function BrowseIssue() {
               </tr>
             </thead>
             <tbody>
-              {filteredIssues.map(issue => (
-                <tr key={issue.issueID} onClick={() => handleClickIssue(issue.issueID)} className={styles.row}>
-                  <td>{issue.title}</td>
-                  <td>{issue.state}</td>
-                  <td>{issue.priority}</td>
-                  <td>{issue.description}</td>
+              {filteredIssues.length > 0 ? (
+                filteredIssues.map(issue => (
+                  <tr key={issue.id} onClick={() => handleClickIssue(issue)} className={styles.row}>
+                    <td>{issue.title}</td>
+                    <td>{issue.state.toLowerCase()}</td>
+                    <td>{issue.priority}</td>
+                    <td>{issue.description}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4">No issues found</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

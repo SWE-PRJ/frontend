@@ -4,53 +4,37 @@ import styles from '../../app/modify_issue/[issueID]/page.module.css';
 import { useRouter, useParams } from 'next/navigation';
 import { TrashBin, Pencil, CheckmarkDoneCircle } from 'react-ionicons';
 
-const issues = {
-  project1: [
-    { issueID: 'issue1', title: 'issue11111', state: 'resolved', priority: 'major', description: '이러쿵저러쿵설명11', fixer: 'tester1', assignee: 'dev2' },
-    { issueID: 'issue2', title: 'issue22222', state: 'assigned', priority: 'minor', description: '이러쿵저쩌쿵설명22' },
-  ],
-  project2: [
-    { issueID: 'issue3', title: 'issue33333', state: 'new', priority: 'major', description: '이러쿵저러쿵설명33' },
-    { issueID: 'issue4', title: 'issue44444', state: 'assigned', priority: 'minor', description: '이러쿵저러쿵설명44' },
-  ],
-};
-
 export default function ModifyIssue() {
   const router = useRouter();
+  const { issueID } = useParams();  // Ensure this retrieves the correct issue parameter
   const [issue, setIssue] = useState(null);
   const [state, setState] = useState('');
   const [assignee, setAssignee] = useState('');
-  const [comments, setComments] = useState([
-    { date: '2024/05/16', user: 'tester1', text: '어쩌고저쩌고' },
-    { date: '2024/05/17', user: 'dev1', text: '수정했습니다' }
-  ]);
+  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [editingCommentIndex, setEditingCommentIndex] = useState(null);
   const [editingCommentText, setEditingCommentText] = useState('');
   const [selectedCommentIndex, setSelectedCommentIndex] = useState(null);
-  const { issueID } = useParams();
 
   useEffect(() => {
-    for (const project in issues) {
-      const projectIssues = issues[project];
-      const foundIssue = projectIssues.find(issue => issue.issueID === issueID);
-      if (foundIssue) {
-        setIssue(foundIssue);
-        setState(foundIssue.state || '');
-        setAssignee(foundIssue.assignee || '');
-        setComments(foundIssue.comments || []);
-        break;
-      }
+    const selectedIssue = JSON.parse(localStorage.getItem('selectedIssue') || '{}');
+    console.log(selectedIssue);
+    if (selectedIssue) {
+      setIssue({
+        ...selectedIssue,
+        state: selectedIssue.state || '',
+        assignee: selectedIssue.assignee || '',
+        comments: selectedIssue.comments || [],
+      });
+      setState(selectedIssue.state || '');
+      setAssignee(selectedIssue.assignee || '');
+      setComments(selectedIssue.comments || []);
     }
   }, [issueID]);
 
   const handleDeleteIssue = () => {
-    const projectKey = Object.keys(issues).find(key => issues[key].some(i => i.issueID === issueID));
-    if (projectKey) {
-      const updatedIssues = issues[projectKey].filter(i => i.issueID !== issueID);
-      issues[projectKey] = updatedIssues;
-      router.push('/browse_project');
-    }
+    // Implement the API call to delete the issue here if required
+    router.push('/browse_project');
   };
 
   const handleStateChange = (event) => {
@@ -68,8 +52,7 @@ export default function ModifyIssue() {
   const handleAddComment = () => {
     const currentDate = new Date().toISOString().split('T')[0];
     const newComments = [...comments, { date: currentDate, user: 'tester1', text: newComment }];
-    const updatedIssue = { ...issue, comments: newComments };
-    setIssue(updatedIssue);
+    setIssue({ ...issue, comments: newComments });
     setComments(newComments);
     setNewComment('');
   };
@@ -83,8 +66,7 @@ export default function ModifyIssue() {
     const updatedComments = comments.map((comment, index) => (
       index === editingCommentIndex ? { ...comment, text: editingCommentText } : comment
     ));
-    const updatedIssue = { ...issue, comments: updatedComments };
-    setIssue(updatedIssue);
+    setIssue({ ...issue, comments: updatedComments });
     setComments(updatedComments);
     setEditingCommentIndex(null);
     setEditingCommentText('');
@@ -92,22 +74,28 @@ export default function ModifyIssue() {
 
   const handleDeleteComment = (index) => {
     const updatedComments = comments.filter((_, i) => i !== index);
-    const updatedIssue = { ...issue, comments: updatedComments };
-    setIssue(updatedIssue);
+    setIssue({ ...issue, comments: updatedComments });
     setComments(updatedComments);
   };
 
   const toggleCommentSelection = (index) => {
-    if (selectedCommentIndex === index) {
-      setSelectedCommentIndex(null); // 이미 선택된 코멘트를 다시 클릭하면 선택 해제
-    } else {
-      setSelectedCommentIndex(index); // 새로운 코멘트 선택
-    }
+    setSelectedCommentIndex(selectedCommentIndex === index ? null : index);
   };
 
   if (!issue) {
     return <div>Loading...</div>;
   }
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+  
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  };
 
   return (
     <div className={styles.container}>
@@ -116,17 +104,15 @@ export default function ModifyIssue() {
           <div className={styles.issueHeader}>
             <div>
               <h1>/{issue.title}</h1>
-              <div className={styles.issueHeaderRight}>
-                <span>{issue.date} {issue.user}</span>
-              </div>
             </div>
             <div>
+              <span>Report: {issue.reporterName} {'('}{formatDate(issue.reportedAt)}{')'}</span>
               <span>Priority: {issue.priority}</span>
-              <span>Fixer: {issue.fixer}</span>
+              <span>Fixer: {issue.fixerName}</span>
             </div>
           </div>
           <div className={styles.description}>
-            <textarea readOnly>{issue.description}</textarea>
+            <textarea readOnly value={issue.description}></textarea>
           </div>
           <div className={styles.stateAssignee}>
             <div>
@@ -151,7 +137,7 @@ export default function ModifyIssue() {
             </div>
           </div>
           <div className={styles.comments}>
-          {comments.map((comment, index) => (
+            {comments.map((comment, index) => (
               <div 
                 key={index} 
                 className={styles.commentContainer}
