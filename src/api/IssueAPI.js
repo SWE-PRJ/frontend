@@ -49,3 +49,11 @@ export const changeIssueStateAPI = async (projectId, issueId, state) => {
   );
   return response.data;
 };
+
+//이슈 통계 분석
+export const getIssueStatisticsAPI = async (projectId, startDate, endDate) => {
+  const response = await ApiManager.get(
+    `/api/projects/${projectId}/issues/statistics?startDate=${startDate}&endDate=${endDate}`
+  );
+  return response.data;
+};

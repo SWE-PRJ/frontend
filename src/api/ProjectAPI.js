@@ -19,4 +19,4 @@ export const CreateProjectAPI = async (projectName) => {
 export const getProjectsAPI = async () => {
   const response = await ApiManager.get("/api/projects");
   return response.data;
-}
+};
