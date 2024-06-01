@@ -57,3 +57,9 @@ export const getIssueStatisticsAPI = async (projectId, startDate, endDate) => {
   );
   return response.data;
 };
+
+//이슈 상세정보 확인
+export const getIssueDetailAPI = async (issueId) => {
+  const response = await ApiManager.get(`/api/issues/${issueId}`);
+  return response.data;
+};
