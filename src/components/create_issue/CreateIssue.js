@@ -1,51 +1,54 @@
-'use client';
-import { useState, useEffect } from 'react';
-import styles from '../../app/create_issue/page.module.css';
-import { createIssueAPI } from '@/api/IssueAPI';
+"use client";
+import { useState, useEffect } from "react";
+import styles from "../../app/create_issue/page.module.css";
+import { createIssueAPI } from "@/api/IssueAPI";
+import { createCommentAPI } from "@/api/CommentAPI";
 
 export default function CreateIssue() {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [priority, setPriority] = useState('major');
-  const [comment, setComment] = useState('');
-  // 이름도 추가해야됨
-  const [userRole, setUserRole] = useState('');
-  const [userID, setUserID] = useState('');
-  // const [projectID, setProjectID] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState("major");
+  const [comment, setComment] = useState("");
+  const [userRole, setUserRole] = useState("");
+  const [userID, setUserID] = useState("");
+  const [projectID, setProjectID] = useState("");
 
   useEffect(() => {
-    const userRole = localStorage.getItem('role');
+    const userRole = localStorage.getItem("role");
     setUserRole(userRole);
   }, []);
 
   useEffect(() => {
-    const userID = localStorage.getItem('id');
+    const userID = localStorage.getItem("id");
     setUserID(userID);
   }, []);
 
-  // useEffect(() => {
-  //   const projectID = localStorage.getItem('projectID');
-  //   setProjectID(projectID);
-  // }, []);
-
-  const projectID = 1;
+  useEffect(() => {
+    const projectID = localStorage.getItem("projectID");
+    setProjectID(projectID);
+  }, []);
 
   const handleCreateIssue = async () => {
-    const newIssue = {
-      title,
-      description,
-      priority,
-      comments: [{ user: userRole, date: new Date().toISOString().split('T')[0], text: comment }]
-    };
-
-    localStorage.setItem('issue', JSON.stringify(newIssue));
-    await createIssueAPI(title, description, userID, priority, projectID);
-    console.log(userID);
-    alert('Issue created!');
-    setTitle('');
-    setDescription('');
-    setPriority('major');
-    setComment('');
+    try {
+      const issueData = await createIssueAPI(
+        title,
+        description,
+        userID,
+        priority,
+        projectID
+      );
+      if (comment) {
+        await createCommentAPI(issueData.id, comment);
+      }
+      alert("Issue and comments created successfully.");
+      setTitle("");
+      setDescription("");
+      setPriority("major");
+      setComment("");
+    } catch (error) {
+      console.error("Failed to create issue or comment:", error);
+      alert("Failed to create issue!");
+    }
   };
 
   return (
@@ -66,7 +69,10 @@ export default function CreateIssue() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
-          <select value={priority} onChange={(e) => setPriority(e.target.value)}>
+          <select
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+          >
             <option value="blocker">blocker</option>
             <option value="critical">critical</option>
             <option value="major">major (default)</option>

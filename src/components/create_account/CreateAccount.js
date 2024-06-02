@@ -1,50 +1,51 @@
-'use client';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import styles from '../../app/create_account/page.module.css';
-import { registerAPI } from '@/api/LoginAPI';
+"use client";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import styles from "../../app/create_account/page.module.css";
+import { registerAPI } from "@/api/LoginAPI";
 
 export default function CreateAccount() {
   const router = useRouter();
-  const [identifier, setIdentifier] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  var [role, setRole] = useState('tester');
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  var [role, setRole] = useState("tester");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // 수정 필요
-    const userIdentifier = localStorage.getItem('useridentifier');
+    const userIdentifier = localStorage.getItem("useridentifier");
     var adminIdentifier;
-    const userrole = localStorage.getItem('role');
-    if (userrole == 'ROLE_ADMIN') {
+    const userrole = localStorage.getItem("role");
+    if (userrole == "ROLE_ADMIN") {
       adminIdentifier = userIdentifier;
     }
-    if (role == 'developer') {
-      role = 'dev';
+    if (role == "developer") {
+      role = "dev";
     }
     try {
-      const response = await registerAPI(username, identifier, password, role, adminIdentifier);
-      setIdentifier('');
-      setUsername('');
-      setPassword('');
-      setRole('tester');
+      const response = await registerAPI(
+        identifier,
+        password,
+        role,
+        adminIdentifier
+      );
+      setIdentifier("");
+      setPassword("");
+      setRole("tester");
     } catch (e) {
       if (e == "Error: 이미 존재하는 아이디") {
         alert("이미 존재하는 아이디입니다.");
-        setIdentifier('');
-        setUsername('');
-        setPassword('');
-        setRole('tester');
-      }
-      else {
+        setIdentifier("");
+        setPassword("");
+        setRole("tester");
+      } else {
         alert("error");
       }
     }
   };
 
   const handleCreateProject = async () => {
-    router.push('/create_project');
+    router.push("/create_project");
   };
 
   const handleRoleChange = (event) => {
@@ -73,22 +74,19 @@ export default function CreateAccount() {
           className={styles.input}
         />
         <input
-          type="text"
-          placeholder="Enter your username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className={styles.input}
-        />
-        <input
           type="password"
           placeholder="Enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className={styles.input}
         />
-        <button type="submit" className={styles.button}>Create account</button>
-        <button className={styles.createProject} onClick={handleCreateProject}>+ create project</button>
-      </form>   
+        <button type="submit" className={styles.button}>
+          Create account
+        </button>
+        <button className={styles.createProject} onClick={handleCreateProject}>
+          + create project
+        </button>
+      </form>
     </div>
   );
 }

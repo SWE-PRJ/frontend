@@ -1,119 +1,121 @@
 .container {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    text-align: center;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #f5e0dc;
-    height: 50px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    width: 100%;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-  }
-  
-  .headerRight {
-    display: flex;
-    align-items: center;
-  }
-  
-  .headerRight span {
-    margin-right: 10px;
-  }
-  
-  .headerRight button {
-    padding: 5px 10px;
-    background-color: #8b0000;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .headerRight button:hover {
-    background-color: #a52a2a;
-  }
-  
-  .chartContainer {
-    margin-top: 70px;
-    padding: 20px;
-  }
-  
-  .barChart {
-    display: flex;
-    justify-content: space-around;
-    align-items: flex-end;
-    height: 200px;
-    margin-bottom: 10px;
-  }
-  
-  .bar {
-    width: 30px;
-    background-color: #d3d3d3;
-    position: relative;
-    cursor: pointer;
-  }
-  
-  .bar span {
-    position: absolute;
-    top: -30px;
-    width: 50%;
-    transform: translateX(-50%);
-    width: auto;
-    text-align: center;
-    font-size: 15px;
-    white-space: nowrap;
-  }
-  
-  .barLabel {
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  
-  .divider {
-    margin: 20px 0;
-  }
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-align: center;
+}
 
-  .bar div {
-    position: absolute;
-    bottom: -20px; /* 바 밑에 위치 */
-    width: 100%;
-    text-align: center;
-    font-size: 12px;
-    white-space: nowrap;
-  }
-  
-  .lineChart {
-    width: 200%;
-    height: 250px;
-  }
-  
-  .dateSelector label {
-    font-family: 'Arial', sans-serif; 
-    color: #333;
-    margin-right: 20px;
-  }
-  
-  .dateSelector input[type="month"] {
-    font-family: 'Arial', sans-serif; 
-    margin-left: 10px;
-    margin-top: 5px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    color: #666;
-  }
-  
-  .dateSelector input[type="month"]:hover {
-    border-color: #888;
-  }
-  
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f5e0dc;
+  height: 50px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+}
+
+.headerRight span {
+  margin-right: 10px;
+}
+
+.headerRight button {
+  padding: 5px 10px;
+  background-color: #8b0000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.headerRight button:hover {
+  background-color: #a52a2a;
+}
+
+.chartContainer {
+  margin-top: 70px;
+  padding: 20px;
+}
+
+.barChart {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 200px;
+  margin-bottom: 10px;
+}
+
+.bar {
+  width: 30px;
+  max-height: 230px;
+  background-color: #d3d3d3;
+  position: relative;
+  cursor: pointer;
+}
+
+.bar span {
+  position: absolute;
+  top: -30px;
+  width: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  text-align: center;
+  font-size: 15px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.barLabel {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.divider {
+  margin: 20px 0;
+}
+
+.bar div {
+  position: absolute;
+  bottom: -20px; /* 바 밑에 위치 */
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.lineChart {
+  width: 200%;
+  height: 250px;
+}
+
+.dateSelector label {
+  font-family: "Arial", sans-serif;
+  color: #333;
+  margin-right: 20px;
+}
+
+.dateSelector input[type="month"] {
+  font-family: "Arial", sans-serif;
+  margin-left: 10px;
+  margin-top: 5px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #666;
+}
+
+.dateSelector input[type="month"]:hover {
+  border-color: #888;
+}

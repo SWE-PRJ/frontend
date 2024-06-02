@@ -1,14 +1,9 @@
 import ApiManager from "./apiManager";
 
 //코멘트 추가
-export const createCommentAPI = async (issueId, userId, content) => {
-  const body = {
-    userId: userId,
-    content: content,
-  };
+export const createCommentAPI = async (issueId, content) => {
   const response = await ApiManager.post(
-    `/api/issues/${issueId}/comments`,
-    body
+    `/api/issues/${issueId}/comments?content=${content}`
   );
   return response.data;
 };
@@ -45,4 +40,4 @@ export const updateCommentAPI = async (issueId, commentId, content) => {
 export const getCommentsAPI = async (issueId) => {
   const response = await ApiManager.get(`/api/issues/${issueId}/comments`);
   return response.data;
-}
+};

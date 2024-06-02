@@ -39,15 +39,12 @@ export const getUserIssueAPI = async (userId) => {
 };
 
 //이슈 상태 변경
-export const changeIssueStateAPI = async (projectId, issueId, state) => {
+export const changeIssueStateAPI = async (issueId, state) => {
   const body = {
     state: state,
   };
-  const response = await ApiManager.patch(
-    `/api/projects/${projectId}/issues/${issueId}`,
-    body
-  );
-  return response.data;
+  const response = await ApiManager.patch(`/api/issues/${issueId}`, body);
+  return response;
 };
 
 //이슈 통계 분석
