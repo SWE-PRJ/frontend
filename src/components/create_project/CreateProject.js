@@ -24,7 +24,10 @@ export default function CreateProject() {
         setProjects(projectsData);
 
         const usersData = await fetchUsersAPI();
-        setUsers(usersData);
+        const filteredUsers = usersData.filter(
+          (user) => user.role !== "ROLE_ADMIN"
+        );
+        setUsers(filteredUsers);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }

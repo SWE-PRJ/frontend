@@ -100,16 +100,22 @@ export default function BrowseProject() {
             </tr>
           </thead>
           <tbody>
-            {projects.map((project) => (
-              <tr
-                key={project.id}
-                onClick={() => handleClickProject(project.id)}
-                className={styles.row}
-              >
-                <td>{project.name}</td>
-                <td>{project.members.join(", ")}</td>
+            {projects.length > 0 ? (
+              projects.map((project) => (
+                <tr
+                  key={project.id}
+                  onClick={() => handleClickProject(project.id)}
+                  className={styles.row}
+                >
+                  <td>{project.name}</td>
+                  <td>{project.members.join(", ")}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="2">No project found</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </main>

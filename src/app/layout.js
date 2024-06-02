@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
+import ApiManager from "../api/apiManager";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
       : "";
 
   const handleLogout = () => {
+    ApiManager.defaults.headers.common["Authorization"] = `Bearer  `;
     router.push("/");
   };
 

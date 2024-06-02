@@ -14,8 +14,6 @@ export const loginAPI = async (identifier, password) => {
   } catch (error) {
     return false;
   }
-  console.log(response.data.token);
-  localStorage.setItem("token", response.data.token);
   localStorage.setItem("id", response.data.id);
   localStorage.setItem("role", response.data.role);
   ApiManager.defaults.headers.common[

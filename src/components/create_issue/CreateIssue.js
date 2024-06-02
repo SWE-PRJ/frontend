@@ -29,6 +29,11 @@ export default function CreateIssue() {
   }, []);
 
   const handleCreateIssue = async () => {
+    if (!title) {
+      alert("Please enter an issue title.");
+      return;
+    }
+
     try {
       const issueData = await createIssueAPI(
         title,

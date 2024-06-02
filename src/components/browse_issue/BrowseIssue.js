@@ -99,12 +99,14 @@ export default function BrowseIssue() {
             )}
           </div>
           <div className={styles.buttonContainer}>
-            <button
-              onClick={handleCreateIssue}
-              className={styles.createIssueButton}
-            >
-              Create New Issue
-            </button>
+            {(userRole === "ROLE_TESTER" || userRole === "ROLE_ADMIN") && (
+              <button
+                onClick={handleCreateIssue}
+                className={styles.createIssueButton}
+              >
+                Create New Issue
+              </button>
+            )}
           </div>
         </div>
         <div className={styles.tableWrapper}>

@@ -84,7 +84,7 @@ export default function CreateAccount() {
           Create account
         </button>
         <button className={styles.createProject} onClick={handleCreateProject}>
-          + create project
+          + create/ invite project
         </button>
       </form>
     </div>

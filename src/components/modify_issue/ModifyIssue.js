@@ -89,7 +89,8 @@ export default function ModifyIssue() {
 
   const handleDeleteIssue = async () => {
     const response = await deleteIssueAPI(issueID);
-    if (response.onSuccess === true) {
+    console.log(response);
+    if (response.onSuccess == true) {
       alert("issue delete successfully");
       router.push("/browse_project");
     } else {
@@ -102,7 +103,7 @@ export default function ModifyIssue() {
   };
 
   const handleAssigneeChange = (event) => {
-    if (userRole === "ROLE_PL") {
+    if (userRole === "ROLE_PL" || userRole === "ROLE_ADMIN") {
       setAssignee(event.target.value);
     }
   };
@@ -164,7 +165,7 @@ export default function ModifyIssue() {
   const handleModifyIssue = async () => {
     try {
       await changeIssueStateAPI(issueID, state);
-      if (userRole === "ROLE_PL" && assignee) {
+      if ((userRole === "ROLE_PL" || userRole === "ROLE_ADMIN") && assignee) {
         await assignIssueToUserAPI(issueID, assignee);
       }
       setIssue((prevIssue) => ({
@@ -232,7 +233,7 @@ export default function ModifyIssue() {
                 id="assignee"
                 value={assignee}
                 onChange={handleAssigneeChange}
-                disabled={userRole !== "ROLE_PL"}
+                disabled={userRole !== "ROLE_PL" && userRole !== "ROLE_ADMIN"}
               >
                 <option value="">none</option>
                 {developers.map((dev) => (
@@ -241,7 +242,7 @@ export default function ModifyIssue() {
                   </option>
                 ))}
               </select>
-              {userRole === "ROLE_PL" && (
+              {(userRole === "ROLE_PL" || userRole === "ROLE_ADMIN") && (
                 <button
                   onClick={recommendDeveloper}
                   className={styles.recommendBtn}
