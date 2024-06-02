@@ -40,14 +40,17 @@ export default function ModifyIssue() {
       .then((data) => {
         const devs = data.userList.filter((user) => user.role === "ROLE_DEV");
         setDevelopers(devs);
-        if (devs.length > 0 && !assignee) {
-          setAssignee(devs[0].identifier);
-        }
       })
       .catch((error) => {
         console.error("Error fetching developers:", error);
       });
   }, []);
+
+  useEffect(() => {
+    if (developers.length > 0 && !assignee) {
+      setAssignee(developers[0].identifier);
+    }
+  }, [developers, assignee]);
 
   useEffect(() => {
     const fetchIssueDetails = async () => {
