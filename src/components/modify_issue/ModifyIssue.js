@@ -9,6 +9,7 @@ import {
   deleteIssueAPI,
 } from "@/api/IssueAPI";
 import { fetchUsersAPI } from "@/api/UserAPI";
+import { getProjectDetailsAPI } from "@/api/ProjectAPI";
 import { getDetailCommentAPI } from "@/api/RecommendAPI";
 import { assignIssueToUserAPI } from "@/api/MappingAPI";
 import {
@@ -35,9 +36,12 @@ export default function ModifyIssue() {
   const userRole = localStorage.getItem("role");
 
   useEffect(() => {
-    fetchUsersAPI()
+    const projectID = localStorage.getItem("projectID");
+    console.log(projectID);
+    getProjectDetailsAPI(projectID)
       .then((data) => {
-        const devs = data.filter((user) => user.role === "ROLE_DEV");
+        const devs = data.userList.filter((user) => user.role === "ROLE_DEV");
+        console.log(devs);
         setDevelopers(devs);
       })
       .catch((error) => {
@@ -159,7 +163,10 @@ export default function ModifyIssue() {
   };
 
   const toggleCommentSelection = (index) => {
-    setSelectedCommentIndex(selectedCommentIndex === index ? null : index);
+    const comment = comments[index];
+    if (comment.commenterIdentifier === userIdentifier) {
+      setSelectedCommentIndex(selectedCommentIndex === index ? null : index);
+    }
   };
 
   const handleModifyIssue = async () => {
@@ -179,6 +186,17 @@ export default function ModifyIssue() {
       alert("Failed to update issue state.");
     }
   };
+
+  const issueStates = [
+    { value: "FIXED", label: "fixed" },
+    { value: "RESOLVED", label: "resolved" },
+    { value: "CLOSED", label: "closed" },
+    { value: "REOPENED", label: "reopened" },
+  ];
+
+  if (issue && (state === "NEW" || state === "ASSIGNED")) {
+    issueStates.unshift({ value: state, label: state.toLowerCase() });
+  }
 
   if (!issue) {
     return <div>Loading...</div>;
@@ -220,11 +238,11 @@ export default function ModifyIssue() {
             <div>
               <label htmlFor="state">State</label>
               <select id="state" value={state} onChange={handleStateChange}>
-                <option value="NEW">new</option>
-                <option value="ASSIGNED">assigned</option>
-                <option value="RESOLVED">resolved</option>
-                <option value="CLOSED">closed</option>
-                <option value="REOPENED">reopened</option>
+                {issueStates.map((state) => (
+                  <option key={state.value} value={state.value}>
+                    {state.label}
+                  </option>
+                ))}
               </select>
             </div>
             <div>

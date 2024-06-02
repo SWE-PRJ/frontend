@@ -42,9 +42,10 @@ export const registerAPI = async (
       body
     );
   } catch (error) {
-    if (error.response.data.errorCode == 500) {
-      throw new Error("이미 존재하는 아이디");
+    if (error.response && error.response.status === 409) {
+      throw new Error("The identifier already exists.");
     } else {
+      throw new Error("An unexpected error occurred.");
     }
   }
   return response;

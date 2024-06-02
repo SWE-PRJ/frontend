@@ -13,6 +13,7 @@ export default function RootLayout({ children }) {
   const pathname = usePathname();
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const hideHeaderElements = pathname === "/";
+  const hideSidebar = pathname === "/";
   const userID =
     typeof window !== "undefined" && window.localStorage
       ? localStorage.getItem("useridentifier") || ""
@@ -32,8 +33,10 @@ export default function RootLayout({ children }) {
   };
 
   const navigateTo = (path) => {
-    setSidebarVisible(false);
-    router.push(path);
+    if (!hideSidebar) {
+      setSidebarVisible(false);
+      router.push(path);
+    }
   };
 
   return (
@@ -52,20 +55,24 @@ export default function RootLayout({ children }) {
             )}
           </div>
         </header>
-        <div className={`sidebar ${sidebarVisible ? "visible" : ""}`}>
-          <div className="sidebar-section">
-            <ul>
-              <li onClick={() => navigateTo("/browse_project")}>Projects</li>
-              {/* <li onClick={() => navigateTo("/browse_issue")}>Issues</li> */}
-            </ul>
+        {!hideSidebar && (
+          <div className={`sidebar ${sidebarVisible ? "visible" : ""}`}>
+            <div className="sidebar-section">
+              <ul>
+                <li onClick={() => navigateTo("/browse_project")}>Projects</li>
+                {/* <li onClick={() => navigateTo("/browse_issue")}>Issues</li> */}
+              </ul>
+            </div>
+            <div className="sidebar-section sidebar-section-lower">
+              <ul>
+                <li onClick={() => navigateTo("/analysis_issue")}>Analysis</li>
+              </ul>
+            </div>
           </div>
-          <div className="sidebar-section sidebar-section-lower">
-            <ul>
-              <li onClick={() => navigateTo("/analysis_issue")}>Analysis</li>
-            </ul>
-          </div>
-        </div>
-        <main className={sidebarVisible ? "sidebar-visible" : ""}>
+        )}
+        <main
+          className={sidebarVisible && !hideSidebar ? "sidebar-visible" : ""}
+        >
           {children}
         </main>
       </body>

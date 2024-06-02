@@ -12,7 +12,11 @@ export default function CreateAccount() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // 수정 필요
+
+    if (!identifier || !password) {
+      alert("Please enter identifier or password.");
+      return;
+    }
     const userIdentifier = localStorage.getItem("useridentifier");
     var adminIdentifier;
     const userrole = localStorage.getItem("role");
@@ -22,6 +26,7 @@ export default function CreateAccount() {
     if (role == "developer") {
       role = "dev";
     }
+
     try {
       const response = await registerAPI(
         identifier,
@@ -29,17 +34,18 @@ export default function CreateAccount() {
         role,
         adminIdentifier
       );
+      console.log(response);
       setIdentifier("");
       setPassword("");
       setRole("tester");
     } catch (e) {
-      if (e == "Error: 이미 존재하는 아이디") {
-        alert("이미 존재하는 아이디입니다.");
+      if (e.message === "The identifier already exists.") {
+        alert(e.message);
         setIdentifier("");
         setPassword("");
         setRole("tester");
       } else {
-        alert("error");
+        alert("An unexpected error occurred.");
       }
     }
   };
@@ -83,10 +89,10 @@ export default function CreateAccount() {
         <button type="submit" className={styles.button}>
           Create account
         </button>
-        <button className={styles.createProject} onClick={handleCreateProject}>
-          + create/ invite project
-        </button>
       </form>
+      <button className={styles.createProject} onClick={handleCreateProject}>
+        + create/ invite project
+      </button>
     </div>
   );
 }

@@ -11,6 +11,7 @@ export default function BrowseIssue() {
   const [searchType, setSearchType] = useState("all");
   const [issues, setIssues] = useState([]);
   const [assignedOnly, setAssignedOnly] = useState(false);
+  const [reportedOnly, setReportedOnly] = useState(false);
   const userRole = localStorage.getItem("role");
   const userID = localStorage.getItem("useridentifier");
 
@@ -19,9 +20,9 @@ export default function BrowseIssue() {
       try {
         let response;
         if (assignedOnly && userRole === "ROLE_DEV") {
-          console.log(userID);
           response = await getUserIssueAPI(userID);
-          console.log(response);
+        } else if (reportedOnly && userRole === "ROLE_TESTER") {
+          response = await getUserIssueAPI(userID); // 수정필요, 리포터 보는 api로 변경
         } else {
           response = await getProjectIssuesAPI(project);
         }
@@ -35,7 +36,7 @@ export default function BrowseIssue() {
       fetchIssues();
       localStorage.setItem("projectID", project);
     }
-  }, [project, assignedOnly, userID, userRole]);
+  }, [project, assignedOnly, reportedOnly, userID, userRole]);
 
   const filteredIssues = issues.filter((issue) => {
     const searchLower = search.toLowerCase();
@@ -95,6 +96,16 @@ export default function BrowseIssue() {
                   onChange={handleAssignedOnlyChange}
                 />
                 Show Assigned Issues Only
+              </label>
+            )}
+            {userRole === "ROLE_TESTER" && (
+              <label>
+                <input
+                  type="checkbox"
+                  checked={reportedOnly}
+                  onChange={() => setReportedOnly(!reportedOnly)}
+                />
+                Show Reported Issues Only
               </label>
             )}
           </div>

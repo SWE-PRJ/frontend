@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import styles from "../../app/create_issue/page.module.css";
 import { createIssueAPI } from "@/api/IssueAPI";
 import { createCommentAPI } from "@/api/CommentAPI";
+import { useRouter } from "next/navigation";
 
 export default function CreateIssue() {
   const [title, setTitle] = useState("");
@@ -12,6 +13,7 @@ export default function CreateIssue() {
   const [userRole, setUserRole] = useState("");
   const [userID, setUserID] = useState("");
   const [projectID, setProjectID] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     const userRole = localStorage.getItem("role");
@@ -46,10 +48,7 @@ export default function CreateIssue() {
         await createCommentAPI(issueData.id, comment);
       }
       alert("Issue and comments created successfully.");
-      setTitle("");
-      setDescription("");
-      setPriority("major");
-      setComment("");
+      router.push(`/browse_issue/${projectID}`);
     } catch (error) {
       console.error("Failed to create issue or comment:", error);
       alert("Failed to create issue!");
