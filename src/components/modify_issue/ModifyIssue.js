@@ -8,7 +8,6 @@ import {
   getIssueDetailAPI,
   deleteIssueAPI,
 } from "@/api/IssueAPI";
-import { fetchUsersAPI } from "@/api/UserAPI";
 import { getProjectDetailsAPI } from "@/api/ProjectAPI";
 import { getDetailCommentAPI } from "@/api/RecommendAPI";
 import { assignIssueToUserAPI } from "@/api/MappingAPI";
@@ -37,11 +36,9 @@ export default function ModifyIssue() {
 
   useEffect(() => {
     const projectID = localStorage.getItem("projectID");
-    console.log(projectID);
     getProjectDetailsAPI(projectID)
       .then((data) => {
         const devs = data.userList.filter((user) => user.role === "ROLE_DEV");
-        console.log(devs);
         setDevelopers(devs);
       })
       .catch((error) => {
@@ -93,12 +90,11 @@ export default function ModifyIssue() {
 
   const handleDeleteIssue = async () => {
     const response = await deleteIssueAPI(issueID);
-    console.log(response);
     if (response.onSuccess == true) {
-      alert("issue delete successfully");
+      alert("Issue deleted successfully");
       router.push("/browse_project");
     } else {
-      alert("issue delete failed");
+      alert("Issue delete failed");
     }
   };
 
@@ -253,7 +249,9 @@ export default function ModifyIssue() {
                 onChange={handleAssigneeChange}
                 disabled={userRole !== "ROLE_PL" && userRole !== "ROLE_ADMIN"}
               >
-                <option value="">none</option>
+                {userRole !== "ROLE_PL" && userRole !== "ROLE_ADMIN" && (
+                  <option value="">none</option>
+                )}
                 {developers.map((dev) => (
                   <option key={dev.id} value={dev.identifier}>
                     {dev.identifier}

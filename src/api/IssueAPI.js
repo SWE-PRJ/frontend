@@ -18,7 +18,6 @@ export const createIssueAPI = async (
     `/api/projects/${projectId}/issues`,
     body
   );
-  // localStorage.setItem("projectID", projectId);
   console.log("This is createIssueAPI" + response.data);
 
   return response.data;
@@ -32,9 +31,19 @@ export const getProjectIssuesAPI = async (projectId) => {
   return response.data;
 };
 
-//할당된 이슈 검색
-export const getUserIssueAPI = async (userId) => {
-  const response = await ApiManager.get("/api/users/" + userId + "/issues");
+//할당된 이슈 검색 - dev
+export const getAssigneeIssueAPI = async (projectId, userId) => {
+  const response = await ApiManager.get(
+    "/api/projects/" + projectId + "/developers/" + userId + "/issues"
+  );
+  return response.data;
+};
+
+//리포트한 이슈 검색 - tester
+export const getRepoterIssueAPI = async (projectId, userId) => {
+  const response = await ApiManager.get(
+    "/api/projects/" + projectId + "/testers/" + userId + "/issues"
+  );
   return response.data;
 };
 

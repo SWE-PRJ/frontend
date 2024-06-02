@@ -39,6 +39,12 @@ export default function RootLayout({ children }) {
     }
   };
 
+  const navigateToHomepage = () => {
+    const homepagePath =
+      userRole === "ROLE_ADMIN" ? "/homepage-admin" : "/homepage-other";
+    navigateTo(homepagePath);
+  };
+
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -59,6 +65,7 @@ export default function RootLayout({ children }) {
           <div className={`sidebar ${sidebarVisible ? "visible" : ""}`}>
             <div className="sidebar-section">
               <ul>
+                <li onClick={navigateToHomepage}>Homepage</li>
                 <li onClick={() => navigateTo("/browse_project")}>Projects</li>
                 {/* <li onClick={() => navigateTo("/browse_issue")}>Issues</li> */}
               </ul>

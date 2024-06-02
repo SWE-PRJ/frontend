@@ -2,7 +2,12 @@
 import { useState, useEffect } from "react";
 import styles from "../../app/browse_issue/[project]/page.module.css";
 import { useRouter, useParams } from "next/navigation";
-import { getProjectIssuesAPI, getUserIssueAPI } from "@/api/IssueAPI";
+import {
+  getProjectIssuesAPI,
+  getAssigneeIssueAPI,
+  getRepoterIssueAPI,
+} from "@/api/IssueAPI";
+import { getProjectsAPI } from "@/api/ProjectAPI";
 
 export default function BrowseIssue() {
   const router = useRouter();
@@ -12,17 +17,32 @@ export default function BrowseIssue() {
   const [issues, setIssues] = useState([]);
   const [assignedOnly, setAssignedOnly] = useState(false);
   const [reportedOnly, setReportedOnly] = useState(false);
+  const [projectName, setProjectName] = useState("");
   const userRole = localStorage.getItem("role");
+  const projectID = localStorage.getItem("projectID");
   const userID = localStorage.getItem("useridentifier");
 
   useEffect(() => {
+    const fetchProjectDetails = async () => {
+      try {
+        const response = await getProjectsAPI();
+        const projectDetails = response.find(
+          (p) => p.id === parseInt(projectID)
+        );
+
+        setProjectName(projectDetails ? projectDetails.name : "");
+      } catch (error) {
+        console.error("Error fetching project details:", error);
+      }
+    };
+
     const fetchIssues = async () => {
       try {
         let response;
         if (assignedOnly && userRole === "ROLE_DEV") {
-          response = await getUserIssueAPI(userID);
+          response = await getAssigneeIssueAPI(projectID, userID);
         } else if (reportedOnly && userRole === "ROLE_TESTER") {
-          response = await getUserIssueAPI(userID); // 수정필요, 리포터 보는 api로 변경
+          response = await getRepoterIssueAPI(projectID, userID);
         } else {
           response = await getProjectIssuesAPI(project);
         }
@@ -33,18 +53,19 @@ export default function BrowseIssue() {
     };
 
     if (project) {
+      fetchProjectDetails();
       fetchIssues();
       localStorage.setItem("projectID", project);
     }
-  }, [project, assignedOnly, reportedOnly, userID, userRole]);
+  }, [project, assignedOnly, reportedOnly, userID, userRole, projectID]);
 
   const filteredIssues = issues.filter((issue) => {
     const searchLower = search.toLowerCase();
     if (searchType === "all") {
       return (
-        issue.title.toLowerCase().includes(search.toLowerCase()) ||
-        issue.state.toLowerCase().includes(search.toLowerCase()) ||
-        issue.priority.toLowerCase().includes(search.toLowerCase())
+        issue.title.toLowerCase().includes(searchLower) ||
+        issue.state.toLowerCase().includes(searchLower) ||
+        issue.priority.toLowerCase().includes(searchLower)
       );
     }
     return issue[searchType].toLowerCase().includes(searchLower);
@@ -67,7 +88,7 @@ export default function BrowseIssue() {
     <div className={styles.container}>
       <main className={styles.main}>
         <div className={styles.projectHeader}>
-          <h1>/{project}</h1>
+          <h1>/{projectName}</h1>
         </div>
         <div className={styles.controls}>
           <div className={styles.searchOptions}>
