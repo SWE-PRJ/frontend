@@ -1,40 +1,74 @@
-'use client';
-import { useState, useEffect } from 'react';
-import styles from '../../app/modify_issue/[issueID]/page.module.css';
-import { useRouter, useParams } from 'next/navigation';
-import { TrashBin, Pencil, CheckmarkDoneCircle } from 'react-ionicons';
+"use client";
+import { useState, useEffect } from "react";
+import styles from "../../app/modify_issue/[issueID]/page.module.css";
+import { useRouter, useParams } from "next/navigation";
+import { TrashBin, Pencil, CheckmarkDoneCircle } from "react-ionicons";
+import { changeIssueStateAPI, getIssueDetailAPI } from "@/api/IssueAPI";
+import { fetchUsersAPI } from "@/api/UserAPI";
+import { assignIssueToUserAPI } from "@/api/MappingAPI";
+import {
+  createCommentAPI,
+  deleteCommentAPI,
+  updateCommentAPI,
+  getCommentsAPI,
+} from "@/api/CommentAPI";
 
 export default function ModifyIssue() {
   const router = useRouter();
-  const { issueID } = useParams();  // Ensure this retrieves the correct issue parameter
+  const { issueID } = useParams();
   const [issue, setIssue] = useState(null);
-  const [state, setState] = useState('');
-  const [assignee, setAssignee] = useState('');
+  const [state, setState] = useState("");
+  const [assignee, setAssignee] = useState("");
+  const [developers, setDevelopers] = useState([]);
   const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState('');
+  const [newComment, setNewComment] = useState("");
   const [editingCommentIndex, setEditingCommentIndex] = useState(null);
-  const [editingCommentText, setEditingCommentText] = useState('');
+  const [editingCommentText, setEditingCommentText] = useState("");
   const [selectedCommentIndex, setSelectedCommentIndex] = useState(null);
 
+  const userIdentifier = localStorage.getItem("useridentifier");
+  const userRole = localStorage.getItem("role");
+
   useEffect(() => {
-    const selectedIssue = JSON.parse(localStorage.getItem('selectedIssue') || '{}');
-    console.log(selectedIssue);
-    if (selectedIssue) {
-      setIssue({
-        ...selectedIssue,
-        state: selectedIssue.state || '',
-        assignee: selectedIssue.assignee || '',
-        comments: selectedIssue.comments || [],
+    fetchUsersAPI()
+      .then((data) => {
+        const devs = data.filter((user) => user.role === "ROLE_DEV");
+        setDevelopers(devs);
+      })
+      .catch((error) => {
+        console.error("Error fetching developers:", error);
       });
-      setState(selectedIssue.state || '');
-      setAssignee(selectedIssue.assignee || '');
-      setComments(selectedIssue.comments || []);
+  }, []);
+
+  useEffect(() => {
+    const fetchIssueDetails = async () => {
+      try {
+        const issueData = await getIssueDetailAPI(issueID);
+        setIssue(issueData);
+        setState(issueData.state || "");
+        setAssignee(issueData.assigneeIdentifier || "");
+      } catch (error) {
+        console.error("Error fetching issue details:", error);
+      }
+    };
+
+    const fetchComments = async () => {
+      try {
+        const commentsData = await getCommentsAPI(issueID);
+        setComments(commentsData);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    };
+
+    if (issueID) {
+      fetchIssueDetails();
+      fetchComments();
     }
   }, [issueID]);
 
   const handleDeleteIssue = () => {
-    // Implement the API call to delete the issue here if required
-    router.push('/browse_project');
+    router.push("/browse_project");
   };
 
   const handleStateChange = (event) => {
@@ -42,44 +76,81 @@ export default function ModifyIssue() {
   };
 
   const handleAssigneeChange = (event) => {
-    setAssignee(event.target.value);
+    if (userRole === "ROLE_PL") {
+      setAssignee(event.target.value);
+    }
   };
 
   const handleCommentChange = (event) => {
     setNewComment(event.target.value);
   };
 
-  const handleAddComment = () => {
-    const currentDate = new Date().toISOString().split('T')[0];
-    const newComments = [...comments, { date: currentDate, user: 'tester1', text: newComment }];
-    setIssue({ ...issue, comments: newComments });
-    setComments(newComments);
-    setNewComment('');
+  const handleAddComment = async () => {
+    try {
+      const newCommentData = await createCommentAPI(issueID, newComment);
+      const newComments = [...comments, newCommentData];
+      setComments(newComments);
+      setNewComment("");
+    } catch (error) {
+      console.error("Failed to add comment:", error);
+    }
   };
 
   const handleEditComment = (index) => {
     setEditingCommentIndex(index);
-    setEditingCommentText(comments[index].text);
+    setEditingCommentText(comments[index].content);
   };
 
-  const handleUpdateComment = () => {
-    const updatedComments = comments.map((comment, index) => (
-      index === editingCommentIndex ? { ...comment, text: editingCommentText } : comment
-    ));
-    setIssue({ ...issue, comments: updatedComments });
-    setComments(updatedComments);
-    setEditingCommentIndex(null);
-    setEditingCommentText('');
+  const handleUpdateComment = async () => {
+    try {
+      const comment = comments[editingCommentIndex];
+      const updatedComment = await updateCommentAPI(
+        issueID,
+        comment.id,
+        editingCommentText
+      );
+      const updatedComments = comments.map((comment, index) =>
+        index === editingCommentIndex ? updatedComment : comment
+      );
+      setComments(updatedComments);
+      setEditingCommentIndex(null);
+      setEditingCommentText("");
+    } catch (error) {
+      console.error("Failed to update comment:", error);
+    }
   };
 
-  const handleDeleteComment = (index) => {
-    const updatedComments = comments.filter((_, i) => i !== index);
-    setIssue({ ...issue, comments: updatedComments });
-    setComments(updatedComments);
+  const handleDeleteComment = async (index) => {
+    try {
+      const comment = comments[index];
+      await deleteCommentAPI(issueID, comment.id);
+      const updatedComments = comments.filter((_, i) => i !== index);
+      setComments(updatedComments);
+    } catch (error) {
+      console.error("Failed to delete comment:", error);
+    }
   };
 
   const toggleCommentSelection = (index) => {
     setSelectedCommentIndex(selectedCommentIndex === index ? null : index);
+  };
+
+  const handleModifyIssue = async () => {
+    try {
+      await changeIssueStateAPI(issueID, state);
+      if (userRole === "ROLE_PL" && assignee) {
+        await assignIssueToUserAPI(issueID, assignee);
+      }
+      setIssue((prevIssue) => ({
+        ...prevIssue,
+        state: state,
+        assignee: assignee,
+      }));
+      alert("Issue updated successfully!");
+    } catch (error) {
+      console.error("Failed to update issue state:", error);
+      alert("Failed to update issue state.");
+    }
   };
 
   if (!issue) {
@@ -89,11 +160,11 @@ export default function ModifyIssue() {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-  
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+
     return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
 
@@ -106,9 +177,13 @@ export default function ModifyIssue() {
               <h1>/{issue.title}</h1>
             </div>
             <div>
-              <span>Report: {issue.reporterName} {'('}{formatDate(issue.reportedAt)}{')'}</span>
+              <span>
+                Report: {issue.reporterIdentifier} {"("}
+                {formatDate(issue.reportedAt)}
+                {")"}
+              </span>
               <span>Priority: {issue.priority}</span>
-              <span>Fixer: {issue.fixerName}</span>
+              <span>Fixer: {issue.fixerIdentifier || "none"}</span>
             </div>
           </div>
           <div className={styles.description}>
@@ -118,28 +193,34 @@ export default function ModifyIssue() {
             <div>
               <label htmlFor="state">State</label>
               <select id="state" value={state} onChange={handleStateChange}>
-                <option value="new">new</option>
-                <option value="assigned">assigned</option>
-                <option value="resolved">resolved</option>
-                <option value="closed">closed</option>
-                <option value="reopened">reopened</option>
+                <option value="NEW">new</option>
+                <option value="ASSIGNED">assigned</option>
+                <option value="RESOLVED">resolved</option>
+                <option value="CLOSED">closed</option>
+                <option value="REOPENED">reopened</option>
               </select>
             </div>
             <div>
               <label htmlFor="assignee">Assignee</label>
-              <select id="assignee" value={assignee} onChange={handleAssigneeChange}>
-                <option value="dev1">dev1</option>
-                <option value="dev2">dev2</option>
-                <option value="dev3">dev3</option>
-                <option value="dev4">dev4</option>
-                <option value="dev5">dev5</option>
+              <select
+                id="assignee"
+                value={assignee}
+                onChange={handleAssigneeChange}
+                disabled={userRole !== "ROLE_PL"}
+              >
+                <option value="">none</option>
+                {developers.map((dev) => (
+                  <option key={dev.id} value={dev.identifier}>
+                    {dev.identifier}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
           <div className={styles.comments}>
             {comments.map((comment, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className={styles.commentContainer}
                 onClick={() => toggleCommentSelection(index)}
               >
@@ -156,8 +237,14 @@ export default function ModifyIssue() {
                   </>
                 ) : (
                   <>
-                    <input readOnly className={styles.commentText} value={comment.text} />
-                    <span className={styles.commentInfo}>{comment.date} {comment.user}</span>
+                    <input
+                      readOnly
+                      className={styles.commentText}
+                      value={comment.content}
+                    />
+                    <span className={styles.commentInfo}>
+                      {formatDate(comment.commentedAt)} {comment.commenterId}
+                    </span>
                     {selectedCommentIndex === index && (
                       <div className={styles.commentIcons}>
                         <Pencil
@@ -183,8 +270,12 @@ export default function ModifyIssue() {
               <button onClick={handleAddComment}>Add Comment</button>
             </div>
           </div>
-          <button className={styles.issueModify}>Issue modify</button>
-          <button onClick={handleDeleteIssue} className={styles.issueDelete}>Delete Issue</button>
+          <button onClick={handleModifyIssue} className={styles.issueModify}>
+            Issue modify
+          </button>
+          <button onClick={handleDeleteIssue} className={styles.issueDelete}>
+            Delete Issue
+          </button>
         </div>
       </main>
     </div>

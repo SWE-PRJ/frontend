@@ -39,13 +39,24 @@ export const getUserIssueAPI = async (userId) => {
 };
 
 //이슈 상태 변경
-export const changeIssueStateAPI = async (projectId, issueId, state) => {
+export const changeIssueStateAPI = async (issueId, state) => {
   const body = {
     state: state,
   };
-  const response = await ApiManager.patch(
-    `/api/projects/${projectId}/issues/${issueId}`,
-    body
+  const response = await ApiManager.patch(`/api/issues/${issueId}`, body);
+  return response;
+};
+
+//이슈 통계 분석
+export const getIssueStatisticsAPI = async (projectId, startDate, endDate) => {
+  const response = await ApiManager.get(
+    `/api/projects/${projectId}/issues/statistics?startDate=${startDate}&endDate=${endDate}`
   );
+  return response.data;
+};
+
+//이슈 상세정보 확인
+export const getIssueDetailAPI = async (issueId) => {
+  const response = await ApiManager.get(`/api/issues/${issueId}`);
   return response.data;
 };
