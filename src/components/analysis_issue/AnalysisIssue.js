@@ -4,15 +4,7 @@ import styles from "../../app/analysis_issue/page.module.css";
 import LineChart from "./LineChart";
 import BarChart from "./BarChart";
 import { getIssueStatisticsAPI } from "@/api/IssueAPI";
-
-const parseDate = (dateString) => {
-  const date = new Date(dateString);
-  return {
-    year: date.getFullYear(),
-    month: date.getMonth() + 1,
-    day: date.getDate(),
-  };
-};
+import { getProjectsAPI } from "@/api/ProjectAPI";
 
 function getDaysInMonth(month, year) {
   switch (month) {
@@ -53,6 +45,8 @@ export default function AnalysisIssue() {
   };
 
   const [selectedMonth, setSelectedMonth] = useState(null);
+  const [projects, setProjects] = useState([]);
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [startDate, setStartDate] = useState(getDefaultStartDate());
   const [endDate, setEndDate] = useState(getDefaultEndDate());
   const [issueStatistics, setIssueStatistics] = useState({
@@ -64,36 +58,59 @@ export default function AnalysisIssue() {
   });
 
   useEffect(() => {
-    const fetchIssueStatistics = async () => {
+    const fetchProjects = async () => {
       try {
-        const startDateString = `${startDate.year}-${String(
-          startDate.month
-        ).padStart(2, "0")}-01`;
-        const endDay = getDaysInMonth(endDate.month, endDate.year);
-        const endDateString = `${endDate.year}-${String(endDate.month).padStart(
-          2,
-          "0"
-        )}-${endDay}`;
-        console.log(
-          "Fetching issue statistics with start date:",
-          startDateString,
-          "and end date:",
-          endDateString
-        );
-        const data = await getIssueStatisticsAPI(
-          1,
-          startDateString,
-          endDateString
-        ); // Assuming projectId is 1 for example
-        console.log("Fetched issue statistics:", data);
-        setIssueStatistics(data);
+        const projectData = await getProjectsAPI();
+        setProjects(projectData);
+        if (projectData.length > 0) {
+          setSelectedProjectId(projectData[0].id);
+        }
       } catch (error) {
-        console.error("Error fetching issue statistics:", error);
+        console.error("Error fetching projects:", error);
       }
     };
 
-    fetchIssueStatistics();
-  }, [startDate, endDate]);
+    fetchProjects();
+  }, []);
+
+  useEffect(() => {
+    const fetchIssueStatistics = async () => {
+      if (selectedProjectId) {
+        try {
+          const startDateString = `${startDate.year}-${String(
+            startDate.month
+          ).padStart(2, "0")}-01`;
+          const endDay = getDaysInMonth(endDate.month, endDate.year);
+          const endDateString = `${endDate.year}-${String(
+            endDate.month
+          ).padStart(2, "0")}-${endDay}`;
+
+          console.log(
+            "Fetching issue statistics for project",
+            selectedProjectId,
+            "with start date:",
+            startDateString,
+            "and end date:",
+            endDateString
+          );
+
+          const data = await getIssueStatisticsAPI(
+            selectedProjectId,
+            startDateString,
+            endDateString
+          );
+          console.log("Fetched issue statistics:", data);
+          setIssueStatistics(data);
+        } catch (error) {
+          console.error("Error fetching issue statistics:", error);
+        }
+      }
+    };
+
+    if (selectedProjectId) {
+      fetchIssueStatistics();
+    }
+  }, [selectedProjectId, startDate, endDate]);
 
   const handleStartDateChange = (e) => {
     const [year, month] = e.target.value.split("-").map(Number);
@@ -145,6 +162,20 @@ export default function AnalysisIssue() {
     <div className={styles.container}>
       <div className={styles.dateSelector}>
         <label>
+          Project
+          <select
+            className={styles.projectDropdown}
+            value={selectedProjectId || ""}
+            onChange={(e) => setSelectedProjectId(e.target.value)}
+          >
+            {projects.map((project) => (
+              <option key={project.id} value={project.id}>
+                {project.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
           Start
           <input
             type="month"
@@ -174,7 +205,6 @@ export default function AnalysisIssue() {
       <div className={styles.chartContainer}>
         <div className={styles.barChartContainer}>
           {" "}
-          {/* New container for bar chart */}
           <div className={styles.barChart}>
             {filteredMonthlyData.map((data, index) => (
               <div

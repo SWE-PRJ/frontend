@@ -60,3 +60,9 @@ export const getIssueDetailAPI = async (issueId) => {
   const response = await ApiManager.get(`/api/issues/${issueId}`);
   return response.data;
 };
+
+//이슈 삭제
+export const deleteIssueAPI = async (issueId) => {
+  const response = await ApiManager.delete(`/api/issues/${issueId}`);
+  return response.data;
+};

@@ -11,7 +11,7 @@ export default function RootLayout({ children }) {
   const router = useRouter();
   const pathname = usePathname();
   const [sidebarVisible, setSidebarVisible] = useState(false);
-  const hideHeaderElements = pathname === "/create_account" || pathname === "/";
+  const hideHeaderElements = pathname === "/";
   const userID =
     typeof window !== "undefined" && window.localStorage
       ? localStorage.getItem("useridentifier") || ""

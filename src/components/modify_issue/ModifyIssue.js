@@ -3,8 +3,13 @@ import { useState, useEffect } from "react";
 import styles from "../../app/modify_issue/[issueID]/page.module.css";
 import { useRouter, useParams } from "next/navigation";
 import { TrashBin, Pencil, CheckmarkDoneCircle } from "react-ionicons";
-import { changeIssueStateAPI, getIssueDetailAPI } from "@/api/IssueAPI";
+import {
+  changeIssueStateAPI,
+  getIssueDetailAPI,
+  deleteIssueAPI,
+} from "@/api/IssueAPI";
 import { fetchUsersAPI } from "@/api/UserAPI";
+import { getDetailCommentAPI } from "@/api/RecommendAPI";
 import { assignIssueToUserAPI } from "@/api/MappingAPI";
 import {
   createCommentAPI,
@@ -67,8 +72,29 @@ export default function ModifyIssue() {
     }
   }, [issueID]);
 
-  const handleDeleteIssue = () => {
-    router.push("/browse_project");
+  const recommendDeveloper = async () => {
+    try {
+      const response = await getDetailCommentAPI(issueID);
+      if (response) {
+        setAssignee(response.userIdentifier);
+        alert(`Recommended developer: ${response.userIdentifier}`);
+      } else {
+        alert("No recommended developer found.");
+      }
+    } catch (error) {
+      console.error("Error recommending developer:", error);
+      alert("Failed to recommend a developer.");
+    }
+  };
+
+  const handleDeleteIssue = async () => {
+    const response = await deleteIssueAPI(issueID);
+    if (response.onSuccess === true) {
+      alert("issue delete successfully");
+      router.push("/browse_project");
+    } else {
+      alert("issue delete failed");
+    }
   };
 
   const handleStateChange = (event) => {
@@ -215,6 +241,14 @@ export default function ModifyIssue() {
                   </option>
                 ))}
               </select>
+              {userRole === "ROLE_PL" && (
+                <button
+                  onClick={recommendDeveloper}
+                  className={styles.recommendBtn}
+                >
+                  Recommend Developer
+                </button>
+              )}
             </div>
           </div>
           <div className={styles.comments}>
@@ -243,7 +277,8 @@ export default function ModifyIssue() {
                       value={comment.content}
                     />
                     <span className={styles.commentInfo}>
-                      {formatDate(comment.commentedAt)} {comment.commenterId}
+                      {formatDate(comment.commentedAt)}{" "}
+                      {comment.commenterIdentifier}
                     </span>
                     {selectedCommentIndex === index && (
                       <div className={styles.commentIcons}>

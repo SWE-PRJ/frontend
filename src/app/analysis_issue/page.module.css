@@ -119,3 +119,16 @@
 .dateSelector input[type="month"]:hover {
   border-color: #888;
 }
+
+.projectDropdown {
+  margin-left: 10px;
+  padding: 4px 8px;
+  background-color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.projectDropdown:focus {
+  border-color: #2a70c1;
+}
