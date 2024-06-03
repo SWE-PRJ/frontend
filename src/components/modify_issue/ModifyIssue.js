@@ -52,7 +52,11 @@ export default function ModifyIssue() {
         const issueData = await getIssueDetailAPI(issueID);
         setIssue(issueData);
         setState(issueData.state || "");
-        setAssignee(issueData.assigneeIdentifier || "");
+        if (issueData.state === "NEW") {
+          setAssignee("none");
+        } else {
+          setAssignee(issueData.assigneeIdentifier || "none");
+        }
       } catch (error) {
         console.error("Error fetching issue details:", error);
       }
@@ -249,9 +253,14 @@ export default function ModifyIssue() {
                 onChange={handleAssigneeChange}
                 disabled={userRole !== "ROLE_PL" && userRole !== "ROLE_ADMIN"}
               >
-                {userRole !== "ROLE_PL" && userRole !== "ROLE_ADMIN" && (
-                  <option value="">none</option>
-                )}
+                {(state === "NEW" || !assignee) &&
+                  (userRole === "ROLE_PL" || userRole === "ROLE_ADMIN") && (
+                    <option value="">none</option>
+                  )}
+                {state === "NEW" &&
+                  (userRole === "ROLE_TESTER" || userRole === "ROLE_DEV") && (
+                    <option value="">none</option>
+                  )}
                 {developers.map((dev) => (
                   <option key={dev.id} value={dev.identifier}>
                     {dev.identifier}
